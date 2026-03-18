@@ -12,6 +12,8 @@ import contactBookRoutes from "./routes/contact-book.js";
 import growthRoutes from "./routes/growth.js";
 import photoRoutes from "./routes/photos.js";
 import subscriptionRoutes from "./routes/subscription.js";
+import careNotesRoutes from "./routes/care-notes.js";
+import audioRoutes from "./routes/audio.js";
 
 // ---------------------------------------------------------------------------
 // App setup
@@ -63,6 +65,8 @@ app.route("/api/contact-book", contactBookRoutes);
 app.route("/api/growth", growthRoutes);
 app.route("/api/photos", photoRoutes);
 app.route("/api/subscription", subscriptionRoutes);
+app.route("/api/care-notes", careNotesRoutes);
+app.route("/api/audio", audioRoutes);
 
 // ---------------------------------------------------------------------------
 // Global error handler

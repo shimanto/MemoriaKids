@@ -45,6 +45,35 @@ export const subscriptionStatusEnum = pgEnum("subscription_status", [
   "trialing",
 ]);
 
+export const contactBookSourceEnum = pgEnum("contact_book_source", [
+  "manual",
+  "ai_generated",
+  "ai_assisted",
+]);
+
+export const audioProcessingStatusEnum = pgEnum("audio_processing_status", [
+  "uploading",
+  "transcribing",
+  "extracting",
+  "generating",
+  "review_pending",
+  "completed",
+  "failed",
+]);
+
+export const careNoteCategoryEnum = pgEnum("care_note_category", [
+  "health",
+  "allergy",
+  "behavior",
+  "development",
+  "family",
+  "dietary",
+  "medication",
+  "milestone_filter",
+  "communication_style",
+  "other",
+]);
+
 // ---------------------------------------------------------------------------
 // Tables
 // ---------------------------------------------------------------------------
@@ -137,11 +166,20 @@ export const contactBookEntries = pgTable(
     nap: jsonb("nap"),
     activities: text("activities"),
     notes: text("notes"),
+    source: contactBookSourceEnum("source").notNull().default("manual"),
+    audioTranscriptId: uuid("audio_transcript_id").references(() => audioTranscripts.id),
+    aiDraft: text("ai_draft"),
+    aiFilteredItems: jsonb("ai_filtered_items"),
+    // items removed by milestone filter: [{ type, description, reason }]
+    isApproved: boolean("is_approved").notNull().default(true),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("contact_book_child_date_idx").on(table.childId, table.date),
+    index("contact_book_source_idx").on(table.source),
   ],
 );
 
@@ -210,6 +248,94 @@ export const faceVectors = pgTable(
   ],
 );
 
+// ---------------------------------------------------------------------------
+// Care Notes — 保護者別ケアノート（園が管理する注意点・配慮事項）
+// ---------------------------------------------------------------------------
+
+export const careNotes = pgTable(
+  "care_notes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    childId: uuid("child_id")
+      .notNull()
+      .references(() => children.id, { onDelete: "cascade" }),
+    nurseryId: uuid("nursery_id")
+      .notNull()
+      .references(() => nurseries.id, { onDelete: "cascade" }),
+    category: careNoteCategoryEnum("category").notNull().default("other"),
+    title: varchar("title", { length: 255 }).notNull(),
+    content: text("content").notNull(),
+    priority: integer("priority").notNull().default(0), // 0=low, 1=medium, 2=high
+    isActive: boolean("is_active").notNull().default(true),
+    createdBy: uuid("created_by")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("care_notes_child_idx").on(table.childId),
+    index("care_notes_nursery_idx").on(table.nurseryId),
+    index("care_notes_category_idx").on(table.category),
+  ],
+);
+
+// ---------------------------------------------------------------------------
+// Audio Recordings — 会議・引継ぎ音声録音
+// ---------------------------------------------------------------------------
+
+export const audioRecordings = pgTable(
+  "audio_recordings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nurseryId: uuid("nursery_id")
+      .notNull()
+      .references(() => nurseries.id, { onDelete: "cascade" }),
+    recordedBy: uuid("recorded_by")
+      .notNull()
+      .references(() => users.id),
+    title: varchar("title", { length: 255 }).notNull(),
+    type: varchar("type", { length: 50 }).notNull().default("meeting"),
+    // meeting = お昼の連絡会, handover = 勤務引継ぎ, other
+    fileUrl: text("file_url").notNull(),
+    durationSeconds: integer("duration_seconds"),
+    recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull(),
+    status: audioProcessingStatusEnum("status").notNull().default("uploading"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("audio_recordings_nursery_idx").on(table.nurseryId),
+    index("audio_recordings_date_idx").on(table.recordedAt),
+    index("audio_recordings_status_idx").on(table.status),
+  ],
+);
+
+// ---------------------------------------------------------------------------
+// Audio Transcripts — AI文字起こし結果＋園児別抽出テキスト
+// ---------------------------------------------------------------------------
+
+export const audioTranscripts = pgTable(
+  "audio_transcripts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    audioRecordingId: uuid("audio_recording_id")
+      .notNull()
+      .references(() => audioRecordings.id, { onDelete: "cascade" }),
+    fullTranscript: text("full_transcript").notNull(),
+    // 園児別に抽出されたセグメント
+    childExtracts: jsonb("child_extracts"),
+    // [{ childId, childName, segments: [{ text, startTime, endTime }], summary }]
+    processingModel: varchar("processing_model", { length: 100 }),
+    // e.g. "whisper-large-v3", "gpt-4o"
+    confidence: numeric("confidence", { precision: 5, scale: 4 }),
+    processedAt: timestamp("processed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("audio_transcripts_recording_idx").on(table.audioRecordingId),
+  ],
+);
+
 export const subscriptions = pgTable("subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
   nurseryId: uuid("nursery_id")
@@ -250,6 +376,7 @@ export const childrenRelations = relations(children, ({ one, many }) => ({
   contactBookEntries: many(contactBookEntries),
   growthRecords: many(growthRecords),
   faceVectors: many(faceVectors),
+  careNotes: many(careNotes),
 }));
 
 export const attendanceRecordsRelations = relations(attendanceRecords, ({ one }) => ({
@@ -260,6 +387,7 @@ export const attendanceRecordsRelations = relations(attendanceRecords, ({ one })
 export const contactBookEntriesRelations = relations(contactBookEntries, ({ one }) => ({
   child: one(children, { fields: [contactBookEntries.childId], references: [children.id] }),
   author: one(users, { fields: [contactBookEntries.authorId], references: [users.id] }),
+  audioTranscript: one(audioTranscripts, { fields: [contactBookEntries.audioTranscriptId], references: [audioTranscripts.id] }),
 }));
 
 export const growthRecordsRelations = relations(growthRecords, ({ one }) => ({
@@ -276,6 +404,22 @@ export const photosRelations = relations(photos, ({ one, many }) => ({
 export const faceVectorsRelations = relations(faceVectors, ({ one }) => ({
   child: one(children, { fields: [faceVectors.childId], references: [children.id] }),
   photo: one(photos, { fields: [faceVectors.photoId], references: [photos.id] }),
+}));
+
+export const careNotesRelations = relations(careNotes, ({ one }) => ({
+  child: one(children, { fields: [careNotes.childId], references: [children.id] }),
+  nursery: one(nurseries, { fields: [careNotes.nurseryId], references: [nurseries.id] }),
+  createdByUser: one(users, { fields: [careNotes.createdBy], references: [users.id] }),
+}));
+
+export const audioRecordingsRelations = relations(audioRecordings, ({ one, many }) => ({
+  nursery: one(nurseries, { fields: [audioRecordings.nurseryId], references: [nurseries.id] }),
+  recordedByUser: one(users, { fields: [audioRecordings.recordedBy], references: [users.id] }),
+  transcripts: many(audioTranscripts),
+}));
+
+export const audioTranscriptsRelations = relations(audioTranscripts, ({ one }) => ({
+  audioRecording: one(audioRecordings, { fields: [audioTranscripts.audioRecordingId], references: [audioRecordings.id] }),
 }));
 
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
