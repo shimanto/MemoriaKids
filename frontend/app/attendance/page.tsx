@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   LogIn,
   LogOut,
@@ -12,73 +11,66 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
+  Loader2,
 } from "lucide-react";
+import {
+  useAttendance,
+  useCheckIn,
+  useCheckOut,
+  type AttendanceRecord,
+} from "@/lib/hooks";
+import { useAuthStore } from "@/lib/auth";
 
-type AttendanceStatus = "present" | "absent" | "not_yet";
+type DisplayStatus = "checked_in" | "checked_out" | "absent" | "not_yet";
 
-interface Child {
-  id: string;
-  name: string;
-  class: string;
-  status: AttendanceStatus;
-  checkInTime?: string;
-  checkOutTime?: string;
-}
-
-const initialChildren: Child[] = [
-  { id: "1", name: "田中 はるき", class: "ひまわり組", status: "present", checkInTime: "08:15" },
-  { id: "2", name: "佐藤 ゆい", class: "さくら組", status: "present", checkInTime: "08:30" },
-  { id: "3", name: "鈴木 そうた", class: "ひまわり組", status: "present", checkInTime: "08:05" },
-  { id: "4", name: "高橋 めい", class: "たんぽぽ組", status: "absent" },
-  { id: "5", name: "渡辺 ゆうと", class: "さくら組", status: "not_yet" },
-  { id: "6", name: "伊藤 りこ", class: "ひまわり組", status: "present", checkInTime: "08:45" },
-  { id: "7", name: "山本 こはる", class: "たんぽぽ組", status: "not_yet" },
-  { id: "8", name: "中村 れん", class: "さくら組", status: "present", checkInTime: "08:20" },
-  { id: "9", name: "小林 あおい", class: "ひまわり組", status: "absent" },
-  { id: "10", name: "加藤 ひなた", class: "たんぽぽ組", status: "present", checkInTime: "09:00" },
-];
-
-const statusLabel: Record<AttendanceStatus, { text: string; color: string }> = {
-  present: { text: "登園済み", color: "text-green-600 bg-green-50" },
+const statusLabel: Record<DisplayStatus, { text: string; color: string }> = {
+  checked_in: { text: "登園済み", color: "text-green-600 bg-green-50" },
+  checked_out: { text: "降園済み", color: "text-blue-600 bg-blue-50" },
   absent: { text: "欠席", color: "text-red-600 bg-red-50" },
   not_yet: { text: "未登園", color: "text-gray-500 bg-gray-100" },
 };
 
+function formatTime(iso: string | null): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
 export default function AttendancePage() {
-  const [children, setChildren] = useState<Child[]>(initialChildren);
   const [search, setSearch] = useState("");
   const [filterClass, setFilterClass] = useState("all");
 
-  const classes = ["all", "ひまわり組", "さくら組", "たんぽぽ組"];
+  const today = new Date().toISOString().slice(0, 10);
+  const { data, isLoading, error } = useAttendance({ from: today });
+  const checkIn = useCheckIn();
+  const checkOut = useCheckOut();
+  const user = useAuthStore((s) => s.user);
 
-  const filtered = children.filter((c) => {
-    const matchSearch = c.name.includes(search);
-    const matchClass = filterClass === "all" || c.class === filterClass;
-    return matchSearch && matchClass;
+  useEffect(() => {
+    useAuthStore.getState().hydrate();
+  }, []);
+
+  const records = data?.data ?? [];
+
+  // Derive unique class names
+  const classes = ["all", ...new Set(records.map((r) => r.childName.split(" ")[0] + "組"))];
+
+  const filtered = records.filter((r) => {
+    const matchSearch = r.childName.includes(search);
+    return matchSearch;
   });
 
-  const presentCount = children.filter((c) => c.status === "present").length;
-  const absentCount = children.filter((c) => c.status === "absent").length;
-  const notYetCount = children.filter((c) => c.status === "not_yet").length;
+  const checkedInCount = records.filter((r) => r.status === "checked_in").length;
+  const checkedOutCount = records.filter((r) => r.status === "checked_out").length;
+  const absentCount = records.filter((r) => r.status === "absent").length;
 
-  function handleCheckIn(id: string) {
-    const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-    setChildren((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, status: "present" as const, checkInTime: time } : c
-      )
-    );
+  function handleCheckIn(childId: string) {
+    if (!user?.nurseryId) return;
+    checkIn.mutate({ childId, nurseryId: user.nurseryId });
   }
 
-  function handleCheckOut(id: string) {
-    const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-    setChildren((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, checkOutTime: time } : c
-      )
-    );
+  function handleCheckOut(recordId: string) {
+    checkOut.mutate({ recordId });
   }
 
   return (
@@ -94,7 +86,7 @@ export default function AttendancePage() {
               <CheckCircle2 className="h-5 w-5 text-green-500" />
               <div>
                 <p className="text-xs text-gray-500">登園済み</p>
-                <p className="text-xl font-bold">{presentCount}名</p>
+                <p className="text-xl font-bold">{checkedInCount}名</p>
               </div>
             </CardContent>
           </Card>
@@ -109,10 +101,10 @@ export default function AttendancePage() {
           </Card>
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-              <Clock className="h-5 w-5 text-gray-400" />
+              <Clock className="h-5 w-5 text-blue-500" />
               <div>
-                <p className="text-xs text-gray-500">未登園</p>
-                <p className="text-xl font-bold">{notYetCount}名</p>
+                <p className="text-xs text-gray-500">降園済み</p>
+                <p className="text-xl font-bold">{checkedOutCount}名</p>
               </div>
             </CardContent>
           </Card>
@@ -131,90 +123,84 @@ export default function AttendancePage() {
                 className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
-            <div className="flex gap-1">
-              {classes.map((cls) => (
-                <button
-                  key={cls}
-                  onClick={() => setFilterClass(cls)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                    filterClass === cls
-                      ? "bg-primary-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {cls === "all" ? "全クラス" : cls}
-                </button>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
         {/* Children list */}
         <Card>
           <CardHeader>
-            <CardTitle>園児一覧</CardTitle>
+            <CardTitle>出欠一覧</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b text-left text-gray-500">
-                    <th className="pb-3 font-medium">園児名</th>
-                    <th className="pb-3 font-medium">クラス</th>
-                    <th className="pb-3 font-medium">ステータス</th>
-                    <th className="pb-3 font-medium">登園時間</th>
-                    <th className="pb-3 font-medium">降園時間</th>
-                    <th className="pb-3 font-medium text-right">操作</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {filtered.map((child) => (
-                    <tr key={child.id} className="hover:bg-gray-50">
-                      <td className="py-3 font-medium text-gray-900">
-                        {child.name}
-                      </td>
-                      <td className="py-3 text-gray-600">{child.class}</td>
-                      <td className="py-3">
-                        <span
-                          className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusLabel[child.status].color}`}
-                        >
-                          {statusLabel[child.status].text}
-                        </span>
-                      </td>
-                      <td className="py-3 text-gray-600">
-                        {child.checkInTime ?? "—"}
-                      </td>
-                      <td className="py-3 text-gray-600">
-                        {child.checkOutTime ?? "—"}
-                      </td>
-                      <td className="py-3 text-right">
-                        <div className="flex justify-end gap-2">
-                          {child.status === "not_yet" && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleCheckIn(child.id)}
-                            >
-                              <LogIn className="h-3.5 w-3.5" />
-                              登園
-                            </Button>
-                          )}
-                          {child.status === "present" && !child.checkOutTime && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleCheckOut(child.id)}
-                            >
-                              <LogOut className="h-3.5 w-3.5" />
-                              降園
-                            </Button>
-                          )}
-                        </div>
-                      </td>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
+                <span className="ml-2 text-sm text-gray-500">読み込み中...</span>
+              </div>
+            ) : error ? (
+              <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                データの取得に失敗しました。再度お試しください。
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="py-12 text-center text-sm text-gray-400">
+                出欠記録がありません
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-gray-500">
+                      <th className="pb-3 font-medium">園児名</th>
+                      <th className="pb-3 font-medium">ステータス</th>
+                      <th className="pb-3 font-medium">登園時間</th>
+                      <th className="pb-3 font-medium">降園時間</th>
+                      <th className="pb-3 font-medium text-right">操作</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y">
+                    {filtered.map((record) => {
+                      const displayStatus: DisplayStatus = record.status;
+                      return (
+                        <tr key={record.id} className="hover:bg-gray-50">
+                          <td className="py-3 font-medium text-gray-900">
+                            {record.childName}
+                          </td>
+                          <td className="py-3">
+                            <span
+                              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusLabel[displayStatus]?.color ?? "text-gray-500 bg-gray-100"}`}
+                            >
+                              {statusLabel[displayStatus]?.text ?? record.status}
+                            </span>
+                          </td>
+                          <td className="py-3 text-gray-600">
+                            {formatTime(record.checkInTime)}
+                          </td>
+                          <td className="py-3 text-gray-600">
+                            {formatTime(record.checkOutTime)}
+                          </td>
+                          <td className="py-3 text-right">
+                            <div className="flex justify-end gap-2">
+                              {record.status === "checked_in" &&
+                                !record.checkOutTime && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleCheckOut(record.id)}
+                                    disabled={checkOut.isPending}
+                                  >
+                                    <LogOut className="h-3.5 w-3.5" />
+                                    降園
+                                  </Button>
+                                )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>

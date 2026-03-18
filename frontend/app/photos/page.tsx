@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,86 +12,39 @@ import {
   Filter,
   Download,
   User,
+  Loader2,
 } from "lucide-react";
-
-interface Photo {
-  id: string;
-  url: string;
-  date: string;
-  event: string;
-  detectedChildren: string[];
-  aiProcessed: boolean;
-}
-
-const mockPhotos: Photo[] = [
-  {
-    id: "1",
-    url: "",
-    date: "2026-03-17",
-    event: "園庭遊び",
-    detectedChildren: ["田中 はるき", "鈴木 そうた", "伊藤 りこ"],
-    aiProcessed: true,
-  },
-  {
-    id: "2",
-    url: "",
-    date: "2026-03-17",
-    event: "園庭遊び",
-    detectedChildren: ["佐藤 ゆい", "中村 れん"],
-    aiProcessed: true,
-  },
-  {
-    id: "3",
-    url: "",
-    date: "2026-03-16",
-    event: "お絵描き",
-    detectedChildren: ["田中 はるき", "佐藤 ゆい", "高橋 めい"],
-    aiProcessed: true,
-  },
-  {
-    id: "4",
-    url: "",
-    date: "2026-03-16",
-    event: "お絵描き",
-    detectedChildren: ["鈴木 そうた"],
-    aiProcessed: true,
-  },
-  {
-    id: "5",
-    url: "",
-    date: "2026-03-15",
-    event: "お誕生日会",
-    detectedChildren: [
-      "渡辺 ゆうと",
-      "加藤 ひなた",
-      "田中 はるき",
-      "佐藤 ゆい",
-    ],
-    aiProcessed: true,
-  },
-  {
-    id: "6",
-    url: "",
-    date: "2026-03-14",
-    event: "給食",
-    detectedChildren: [],
-    aiProcessed: false,
-  },
-];
-
-const events = ["すべて", "園庭遊び", "お絵描き", "お誕生日会", "給食"];
+import { usePhotos, useUploadPhoto, type Photo } from "@/lib/hooks";
+import { useAuthStore } from "@/lib/auth";
 
 export default function PhotosPage() {
-  const [filterEvent, setFilterEvent] = useState("すべて");
   const [filterChild, setFilterChild] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const filtered = mockPhotos.filter((p) => {
-    const matchEvent =
-      filterEvent === "すべて" || p.event === filterEvent;
-    const matchChild =
-      !filterChild || p.detectedChildren.some((c) => c.includes(filterChild));
-    return matchEvent && matchChild;
+  const { data, isLoading, error } = usePhotos();
+  const uploadPhoto = useUploadPhoto();
+
+  useEffect(() => {
+    useAuthStore.getState().hydrate();
+  }, []);
+
+  const photos = data?.data ?? [];
+
+  const filtered = photos.filter((p) => {
+    if (!filterChild) return true;
+    return p.caption?.includes(filterChild);
   });
+
+  function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("photo", file);
+    uploadPhoto.mutate(formData);
+    e.target.value = "";
+  }
+
+  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -104,10 +57,26 @@ export default function PhotosPage() {
               AI顔認識で園児ごとに自動分類されます
             </p>
           </div>
-          <Button>
-            <Upload className="h-4 w-4" />
-            写真をアップロード
-          </Button>
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/heic"
+              className="hidden"
+              onChange={handleUpload}
+            />
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadPhoto.isPending}
+            >
+              {uploadPhoto.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="h-4 w-4" />
+              )}
+              写真をアップロード
+            </Button>
+          </div>
         </div>
 
         {/* AI badge */}
@@ -117,9 +86,7 @@ export default function PhotosPage() {
               <Sparkles className="h-6 w-6 text-nursery-purple" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">
-                AI顔認識が有効です
-              </p>
+              <p className="font-medium text-gray-900">AI顔認識が有効です</p>
               <p className="text-sm text-gray-500">
                 アップロードされた写真から自動的に園児を検出・分類します。
                 保護者は自分のお子さまの写真だけを閲覧できます。
@@ -135,94 +102,78 @@ export default function PhotosPage() {
         {/* Filters */}
         <div className="mb-6 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-400" />
-            <span className="text-sm text-gray-500">イベント:</span>
-            <div className="flex gap-1">
-              {events.map((event) => (
-                <button
-                  key={event}
-                  onClick={() => setFilterEvent(event)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                    filterEvent === event
-                      ? "bg-primary-500 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  {event}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="園児名で絞り込み..."
+              placeholder="キャプションで絞り込み..."
               value={filterChild}
               onChange={(e) => setFilterChild(e.target.value)}
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
+          <span className="text-sm text-gray-400">
+            {filtered.length}件の写真
+          </span>
         </div>
 
-        {/* Photo grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((photo) => (
-            <Card key={photo.id} className="overflow-hidden group">
-              {/* Placeholder image area */}
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <div className="text-center">
-                  <ImageIcon className="mx-auto h-12 w-12 text-gray-300" />
-                  <p className="text-xs text-gray-400 mt-1">{photo.event}</p>
-                </div>
-                {photo.aiProcessed && (
+        {/* Content */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
+            <span className="ml-2 text-sm text-gray-500">読み込み中...</span>
+          </div>
+        ) : error ? (
+          <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+            写真の取得に失敗しました。再度お試しください。
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Camera className="h-12 w-12 text-gray-300" />
+            <p className="mt-3 text-sm text-gray-400">
+              写真がまだアップロードされていません
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((photo) => (
+              <Card key={photo.id} className="overflow-hidden group">
+                <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {photo.url ? (
+                    <img
+                      src={`${apiBase}${photo.url}`}
+                      alt={photo.caption ?? "写真"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <ImageIcon className="mx-auto h-12 w-12 text-gray-300" />
+                    </div>
+                  )}
                   <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-purple-600 shadow-sm backdrop-blur-sm">
                     <Sparkles className="h-3 w-3" />
                     AI分類済み
                   </div>
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <Button size="sm" variant="secondary" className="shadow-lg">
-                    <Download className="h-3.5 w-3.5" />
-                    ダウンロード
-                  </Button>
-                </div>
-              </div>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-900">
-                    {photo.event}
-                  </span>
-                  <span className="text-xs text-gray-400">{photo.date}</span>
-                </div>
-                {photo.detectedChildren.length > 0 ? (
-                  <div className="flex flex-wrap gap-1">
-                    {photo.detectedChildren.map((child) => (
-                      <span
-                        key={child}
-                        className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700"
-                      >
-                        <User className="h-2.5 w-2.5" />
-                        {child}
-                      </span>
-                    ))}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <Button size="sm" variant="secondary" className="shadow-lg">
+                      <Download className="h-3.5 w-3.5" />
+                      ダウンロード
+                    </Button>
                   </div>
-                ) : (
-                  <p className="text-xs text-gray-400">
-                    顔認識処理を待っています...
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {filtered.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16">
-            <Camera className="h-12 w-12 text-gray-300" />
-            <p className="mt-3 text-sm text-gray-400">
-              該当する写真が見つかりませんでした
-            </p>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-900">
+                      {photo.caption ?? "写真"}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {photo.takenAt
+                        ? new Date(photo.takenAt).toLocaleDateString("ja-JP")
+                        : new Date(photo.createdAt).toLocaleDateString("ja-JP")}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
       </main>

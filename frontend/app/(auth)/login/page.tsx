@@ -5,6 +5,8 @@ import { Sparkles, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuthStore } from "@/lib/auth";
+import { api } from "@/lib/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const setAuth = useAuthStore((s) => s.setAuth);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,25 +22,21 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787"}/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const res = await api.post<{
+        user: {
+          id: string;
+          email: string;
+          name: string;
+          role: "parent" | "nursery_admin" | "nursery_staff" | "super_admin";
+          nurseryId: string | null;
+        };
+        token: string;
+      }>("/api/auth/login", { email, password });
 
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.message ?? "ログインに失敗しました");
-      }
-
-      const { token } = await res.json();
-      localStorage.setItem("auth_token", token);
+      setAuth(res.user, res.token);
       window.location.href = "/dashboard";
     } catch (err) {
-      setError(err instanceof Error ? err.message : "エラーが発生しました");
+      setError(err instanceof Error ? err.message : "ログインに失敗しました");
     } finally {
       setIsLoading(false);
     }

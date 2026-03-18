@@ -13,7 +13,8 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuthStore } from "@/lib/auth";
 
 const navigation = [
   { name: "ダッシュボード", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +27,12 @@ const navigation = [
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+
+  useEffect(() => {
+    useAuthStore.getState().hydrate();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-sm">
@@ -59,8 +66,13 @@ export function Header() {
             </nav>
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <span className="text-sm text-gray-500">さくら保育園</span>
-            <button className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+            <span className="text-sm text-gray-500">
+              {user?.name ?? "さくら保育園"}
+            </span>
+            <button
+              onClick={logout}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
+            >
               <LogOut className="h-4 w-4" />
               ログアウト
             </button>
