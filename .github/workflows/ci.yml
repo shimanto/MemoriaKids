@@ -1,0 +1,186 @@
+# MemoriaKids CI パイプライン
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpmをセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 依存関係をインストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 共有型定義をビルド
+        run: pnpm --filter @memoria-kids/shared-types build
+
+      - name: Lint実行
+        run: pnpm lint
+
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: memoria_kids_test
+          POSTGRES_USER: memoria
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U memoria"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpmをセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 依存関係をインストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 共有型定義をビルド
+        run: pnpm --filter @memoria-kids/shared-types build
+
+      - name: バックエンドテスト実行
+        run: pnpm --filter backend test
+        env:
+          DATABASE_URL: postgresql://memoria:test_password@localhost:5432/memoria_kids_test
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: test_jwt_secret
+          NODE_ENV: test
+
+  test-frontend:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpmをセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 依存関係をインストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 共有型定義をビルド
+        run: pnpm --filter @memoria-kids/shared-types build
+
+      - name: フロントエンドテスト実行
+        run: pnpm --filter frontend test
+        env:
+          NODE_ENV: test
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-frontend]
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpmをセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: 依存関係をインストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 全パッケージをビルド
+        run: pnpm build
+
+  ai-service-lint:
+    name: AI Service Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Pythonをセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python依存関係をインストール
+        run: |
+          cd ai-service
+          pip install ruff
+          pip install -r requirements.txt
+
+      - name: Ruffでlint実行
+        run: |
+          cd ai-service
+          ruff check app/
+
+      - name: Ruffでフォーマットチェック
+        run: |
+          cd ai-service
+          ruff format --check app/
