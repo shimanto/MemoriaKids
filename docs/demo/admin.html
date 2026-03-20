@@ -14,23 +14,25 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
     body { font-family: 'Noto Sans JP', sans-serif; }
-    .tab-active { border-bottom: 2px solid #ea5a2e; color: #ea5a2e; }
     .child-card { transition: all 0.2s; cursor: pointer; }
     .child-card:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .child-card:active { transform: scale(0.97); }
     .child-card.checked-in { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-color: #86efac; }
     .child-card.checked-out { background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-color: #93c5fd; opacity: 0.7; }
     .sparkle { animation: sparkle 2s ease-in-out infinite; }
     @keyframes sparkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.15)} }
     .sidebar-item { transition: all 0.2s; }
     .sidebar-item:hover { transform: translateX(4px); }
+    .mobile-nav-item.active { color: #ea5a2e; background: #fef3f0; }
+    .mobile-nav-item.active .nav-label { font-weight: 600; }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
 
   <!-- Sidebar + Content -->
   <div class="flex">
-    <!-- Sidebar -->
-    <aside class="hidden lg:flex flex-col w-60 bg-white border-r min-h-screen p-4">
+    <!-- Sidebar (PC only) -->
+    <aside class="hidden lg:flex flex-col w-60 bg-white border-r min-h-screen p-4 fixed left-0 top-0 z-40">
       <div class="flex items-center gap-2 mb-8">
         <span class="text-xl sparkle">🧸</span>
         <span class="font-bold text-primary-500">MemoriaKids</span>
@@ -64,67 +66,68 @@
     </aside>
 
     <!-- Main -->
-    <main class="flex-1 min-h-screen">
+    <main class="flex-1 min-h-screen lg:ml-60 pb-24 lg:pb-6">
       <!-- Top bar -->
-      <header class="bg-white border-b px-6 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-4">
+      <header class="bg-white border-b px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-30">
+        <div class="flex items-center gap-3">
           <span class="lg:hidden text-xl sparkle">🧸</span>
           <div>
-            <p class="font-medium text-sm">さくら保育園</p>
-            <p class="text-xs text-gray-400">2026年3月19日（水）</p>
+            <p class="font-medium text-sm">🌸 さくら保育園</p>
+            <p class="text-[10px] sm:text-xs text-gray-400">2026年3月19日（水）</p>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">🟢 デモモード</span>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-[10px] sm:text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">🟢 デモ</span>
+          <a href="../index.html" class="lg:hidden text-[10px] text-gray-400 hover:text-primary-500">← 概要</a>
           <div class="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-sm">👩‍🏫</div>
         </div>
       </header>
 
-      <div class="p-6">
+      <div class="p-4 sm:p-6">
         <!-- Dashboard Tab -->
         <div id="tab-dashboard">
-          <h1 class="text-2xl font-bold mb-6">📊 ダッシュボード</h1>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100">
-              <p class="text-xs text-gray-500">🏫 登園済み</p>
-              <p class="text-2xl font-bold text-green-500">18<span class="text-sm text-gray-400">/24名</span></p>
+          <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">📊 ダッシュボード</h1>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-3 sm:p-4 border border-green-100">
+              <p class="text-[10px] sm:text-xs text-gray-500">🏫 登園済み</p>
+              <p class="text-xl sm:text-2xl font-bold text-green-500">18<span class="text-xs sm:text-sm text-gray-400">/24名</span></p>
             </div>
-            <div class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-4 border border-red-100">
-              <p class="text-xs text-gray-500">😷 欠席</p>
-              <p class="text-2xl font-bold text-red-500">3名</p>
+            <div class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-3 sm:p-4 border border-red-100">
+              <p class="text-[10px] sm:text-xs text-gray-500">😷 欠席</p>
+              <p class="text-xl sm:text-2xl font-bold text-red-500">3名</p>
             </div>
-            <div class="bg-gradient-to-br from-blue-50 to-sky-50 rounded-2xl p-4 border border-blue-100">
-              <p class="text-xs text-gray-500">📖 連絡帳（本日）</p>
-              <p class="text-2xl font-bold text-blue-500">12<span class="text-sm text-gray-400">/24件</span></p>
+            <div class="bg-gradient-to-br from-blue-50 to-sky-50 rounded-2xl p-3 sm:p-4 border border-blue-100">
+              <p class="text-[10px] sm:text-xs text-gray-500">📖 連絡帳</p>
+              <p class="text-xl sm:text-2xl font-bold text-blue-500">12<span class="text-xs sm:text-sm text-gray-400">/24件</span></p>
             </div>
-            <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-4 border border-purple-100">
-              <p class="text-xs text-gray-500">👩‍🏫 在籍スタッフ</p>
-              <p class="text-2xl font-bold text-purple-500">8名</p>
+            <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-3 sm:p-4 border border-purple-100">
+              <p class="text-[10px] sm:text-xs text-gray-500">👩‍🏫 スタッフ</p>
+              <p class="text-xl sm:text-2xl font-bold text-purple-500">8名</p>
             </div>
           </div>
           <!-- Recent activity -->
-          <div class="bg-white rounded-xl border p-4">
+          <div class="bg-white rounded-2xl border p-4">
             <h3 class="font-medium mb-3 text-sm">🕐 最近のアクティビティ</h3>
-            <div class="space-y-3 text-sm">
-              <div class="flex items-center gap-3">
-                <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                <span class="text-gray-600">田中はなちゃんが<span class="font-medium">登園</span>しました</span>
-                <span class="ml-auto text-xs text-gray-400">08:42</span>
+            <div class="space-y-3 text-xs sm:text-sm">
+              <div class="flex items-start sm:items-center gap-2 sm:gap-3">
+                <span class="h-2 w-2 rounded-full bg-green-500 mt-1.5 sm:mt-0 shrink-0"></span>
+                <span class="text-gray-600">田中はなちゃんが<span class="font-medium">登園</span>しました 🌸</span>
+                <span class="ml-auto text-[10px] sm:text-xs text-gray-400 shrink-0">08:42</span>
               </div>
-              <div class="flex items-center gap-3">
-                <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                <span class="text-gray-600">鈴木ゆうとくんが<span class="font-medium">QRコード</span>で登園しました</span>
-                <span class="ml-auto text-xs text-gray-400">08:38</span>
+              <div class="flex items-start sm:items-center gap-2 sm:gap-3">
+                <span class="h-2 w-2 rounded-full bg-green-500 mt-1.5 sm:mt-0 shrink-0"></span>
+                <span class="text-gray-600">鈴木ゆうとくんが<span class="font-medium">QRコード</span>で登園 📱</span>
+                <span class="ml-auto text-[10px] sm:text-xs text-gray-400 shrink-0">08:38</span>
               </div>
-              <div class="flex items-center gap-3">
-                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
-                <span class="text-gray-600">山田先生が<span class="font-medium">連絡帳</span>を3件作成しました</span>
-                <span class="ml-auto text-xs text-gray-400">08:30</span>
+              <div class="flex items-start sm:items-center gap-2 sm:gap-3">
+                <span class="h-2 w-2 rounded-full bg-blue-500 mt-1.5 sm:mt-0 shrink-0"></span>
+                <span class="text-gray-600">山田先生が<span class="font-medium">連絡帳</span>を3件作成 ✏️</span>
+                <span class="ml-auto text-[10px] sm:text-xs text-gray-400 shrink-0">08:30</span>
               </div>
-              <div class="flex items-center gap-3">
-                <span class="h-2 w-2 rounded-full bg-purple-500"></span>
-                <span class="text-gray-600"><span class="font-medium">音声AI</span>で連絡帳ドラフト5件を自動生成しました</span>
-                <span class="ml-auto text-xs text-gray-400">08:15</span>
+              <div class="flex items-start sm:items-center gap-2 sm:gap-3">
+                <span class="h-2 w-2 rounded-full bg-purple-500 mt-1.5 sm:mt-0 shrink-0"></span>
+                <span class="text-gray-600"><span class="font-medium">🤖 音声AI</span>で連絡帳5件を自動生成 ✨</span>
+                <span class="ml-auto text-[10px] sm:text-xs text-gray-400 shrink-0">08:15</span>
               </div>
             </div>
           </div>
@@ -132,121 +135,231 @@
 
         <!-- Attendance Tab -->
         <div id="tab-attendance" class="hidden">
-          <h1 class="text-2xl font-bold mb-6">📋 出欠管理</h1>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-primary-500 text-white">全クラス</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">ひよこ組 (0歳)</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">りす組 (1歳)</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">うさぎ組 (2歳)</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">さくら組 (3歳)</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">ひまわり組 (4歳)</button>
-            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">そら組 (5歳)</button>
+          <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">📋 出欠管理</h1>
+          <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-primary-500 text-white">全クラス</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">🐣 ひよこ組</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">🐿️ りす組</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">🐰 うさぎ組</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">🌸 さくら組</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">🌻 ひまわり組</button>
+            <button class="rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-600">☁️ そら組</button>
           </div>
-          <div class="bg-white rounded-xl border overflow-x-auto">
+
+          <!-- PC: Table view -->
+          <div class="hidden sm:block bg-white rounded-2xl border overflow-x-auto">
             <table class="w-full text-sm">
               <thead><tr class="border-b text-gray-500 text-left">
-                <th class="p-3 font-medium">園児名</th>
-                <th class="p-3 font-medium">クラス</th>
-                <th class="p-3 font-medium">ステータス</th>
-                <th class="p-3 font-medium">方式</th>
-                <th class="p-3 font-medium">登園</th>
-                <th class="p-3 font-medium">降園</th>
-                <th class="p-3 font-medium text-right">操作</th>
+                <th class="p-3 font-medium">👧 園児名</th>
+                <th class="p-3 font-medium">🏫 クラス</th>
+                <th class="p-3 font-medium">📌 ステータス</th>
+                <th class="p-3 font-medium">📱 方式</th>
+                <th class="p-3 font-medium">🌅 登園</th>
+                <th class="p-3 font-medium">🌇 降園</th>
+                <th class="p-3 font-medium text-right">⚡ 操作</th>
               </tr></thead>
               <tbody>
-                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">田中 はな</td><td class="p-3 text-xs text-gray-500">さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x1F4F1; QR</td><td class="p-3 text-gray-500">08:42</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
-                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">鈴木 ゆうと</td><td class="p-3 text-xs text-gray-500">さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x270F;&#xFE0F; 手入力</td><td class="p-3 text-gray-500">08:38</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
-                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">佐藤 みく</td><td class="p-3 text-xs text-gray-500">うさぎ組</td><td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full text-xs">降園済み</span></td><td class="p-3 text-xs">&#x270F;&#xFE0F; 手入力</td><td class="p-3 text-gray-500">08:15</td><td class="p-3 text-gray-500">16:30</td><td class="p-3"></td></tr>
-                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">高橋 りく</td><td class="p-3 text-xs text-gray-500">ひまわり組</td><td class="p-3"><span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-full text-xs">欠席</span></td><td class="p-3 text-xs">-</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-gray-400">-</td><td class="p-3"></td></tr>
-                <tr class="hover:bg-gray-50"><td class="p-3 font-medium">山本 あおい</td><td class="p-3 text-xs text-gray-500">ひよこ組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x1F4F1; QR</td><td class="p-3 text-gray-500">09:01</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">田中 はな</td><td class="p-3 text-xs text-gray-500">🌸 さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">✅ 登園済み</span></td><td class="p-3 text-xs">📱 QR</td><td class="p-3 text-gray-500">08:42</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-50">🏠 降園</button></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">鈴木 ゆうと</td><td class="p-3 text-xs text-gray-500">🌸 さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">✅ 登園済み</span></td><td class="p-3 text-xs">✏️ 手入力</td><td class="p-3 text-gray-500">08:38</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-50">🏠 降園</button></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">佐藤 みく</td><td class="p-3 text-xs text-gray-500">🐰 うさぎ組</td><td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full text-xs">🏠 降園済み</span></td><td class="p-3 text-xs">✏️ 手入力</td><td class="p-3 text-gray-500">08:15</td><td class="p-3 text-gray-500">16:30</td><td class="p-3"></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">高橋 りく</td><td class="p-3 text-xs text-gray-500">🌻 ひまわり組</td><td class="p-3"><span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-full text-xs">😷 欠席</span></td><td class="p-3 text-xs">-</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-gray-400">-</td><td class="p-3"></td></tr>
+                <tr class="hover:bg-gray-50"><td class="p-3 font-medium">山本 あおい</td><td class="p-3 text-xs text-gray-500">🐣 ひよこ組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">✅ 登園済み</span></td><td class="p-3 text-xs">📱 QR</td><td class="p-3 text-gray-500">09:01</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-50">🏠 降園</button></td></tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Mobile: Card view -->
+          <div class="sm:hidden space-y-3">
+            <div class="bg-white rounded-2xl border p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-lg">👧</div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm">田中 はな</p>
+                  <p class="text-[10px] text-gray-400">🌸 さくら組</p>
+                </div>
+                <span class="bg-green-50 text-green-600 px-2 py-1 rounded-full text-[10px] font-medium">✅ 登園済み</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-gray-500 bg-gray-50 rounded-xl px-3 py-2">
+                <span>📱 QR</span>
+                <span>🌅 08:42</span>
+                <span>🌇 -</span>
+                <button class="bg-white border rounded-lg px-2 py-1 text-gray-600">🏠 降園</button>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-lg">👦</div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm">鈴木 ゆうと</p>
+                  <p class="text-[10px] text-gray-400">🌸 さくら組</p>
+                </div>
+                <span class="bg-green-50 text-green-600 px-2 py-1 rounded-full text-[10px] font-medium">✅ 登園済み</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-gray-500 bg-gray-50 rounded-xl px-3 py-2">
+                <span>✏️ 手入力</span>
+                <span>🌅 08:38</span>
+                <span>🌇 -</span>
+                <button class="bg-white border rounded-lg px-2 py-1 text-gray-600">🏠 降園</button>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-4 opacity-70">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-lg">👧</div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm">佐藤 みく</p>
+                  <p class="text-[10px] text-gray-400">🐰 うさぎ組</p>
+                </div>
+                <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-full text-[10px] font-medium">🏠 降園済み</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-gray-500 bg-gray-50 rounded-xl px-3 py-2">
+                <span>✏️ 手入力</span>
+                <span>🌅 08:15</span>
+                <span>🌇 16:30</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center text-lg">👦</div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm">高橋 りく</p>
+                  <p class="text-[10px] text-gray-400">🌻 ひまわり組</p>
+                </div>
+                <span class="bg-red-50 text-red-600 px-2 py-1 rounded-full text-[10px] font-medium">😷 欠席</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-4">
+              <div class="flex items-center gap-3 mb-2">
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-lg">👶</div>
+                <div class="flex-1">
+                  <p class="font-bold text-sm">山本 あおい</p>
+                  <p class="text-[10px] text-gray-400">🐣 ひよこ組</p>
+                </div>
+                <span class="bg-green-50 text-green-600 px-2 py-1 rounded-full text-[10px] font-medium">✅ 登園済み</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-gray-500 bg-gray-50 rounded-xl px-3 py-2">
+                <span>📱 QR</span>
+                <span>🌅 09:01</span>
+                <span>🌇 -</span>
+                <button class="bg-white border rounded-lg px-2 py-1 text-gray-600">🏠 降園</button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Touch Panel Tab -->
         <div id="tab-touchpanel" class="hidden">
-          <h1 class="text-2xl font-bold mb-2">🖥️ タッチパネル</h1>
-          <p class="text-sm text-gray-500 mb-6">🌸 さくら組（3歳児）- 園児をタップして登降園を打刻</p>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            <div class="child-card checked-in rounded-2xl border-2 p-4 text-center relative">
+          <h1 class="text-xl sm:text-2xl font-bold mb-2">🖥️ タッチパネル</h1>
+          <p class="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">🌸 さくら組（3歳児）- 園児をタップして登降園を打刻</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+            <div class="child-card checked-in rounded-2xl border-2 p-3 sm:p-4 text-center relative">
               <div class="absolute top-2 right-2 text-xs">🟢</div>
-              <div class="mx-auto h-16 w-16 rounded-full bg-green-100 flex items-center justify-center text-3xl mb-2">👧</div>
-              <p class="text-sm font-bold">田中 はな</p>
-              <p class="text-[10px] text-green-600 mt-1">✅ 08:42 タップで降園</p>
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-green-100 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👧</div>
+              <p class="text-xs sm:text-sm font-bold">田中 はな</p>
+              <p class="text-[9px] sm:text-[10px] text-green-600 mt-1">✅ 08:42 タップで降園</p>
             </div>
-            <div class="child-card checked-in rounded-2xl border-2 p-4 text-center relative">
+            <div class="child-card checked-in rounded-2xl border-2 p-3 sm:p-4 text-center relative">
               <div class="absolute top-2 right-2 text-xs">🟢</div>
-              <div class="mx-auto h-16 w-16 rounded-full bg-green-100 flex items-center justify-center text-3xl mb-2">👦</div>
-              <p class="text-sm font-bold">鈴木 ゆうと</p>
-              <p class="text-[10px] text-green-600 mt-1">✅ 08:38 タップで降園</p>
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-green-100 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👦</div>
+              <p class="text-xs sm:text-sm font-bold">鈴木 ゆうと</p>
+              <p class="text-[9px] sm:text-[10px] text-green-600 mt-1">✅ 08:38 タップで降園</p>
             </div>
-            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
-              <div class="mx-auto h-16 w-16 rounded-full bg-pink-50 flex items-center justify-center text-3xl mb-2">👧</div>
-              <p class="text-sm font-bold">伊藤 さくら</p>
-              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-3 sm:p-4 text-center">
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-pink-50 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👧</div>
+              <p class="text-xs sm:text-sm font-bold">伊藤 さくら</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
             </div>
-            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
-              <div class="mx-auto h-16 w-16 rounded-full bg-blue-50 flex items-center justify-center text-3xl mb-2">👦</div>
-              <p class="text-sm font-bold">渡辺 そうた</p>
-              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-3 sm:p-4 text-center">
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-blue-50 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👦</div>
+              <p class="text-xs sm:text-sm font-bold">渡辺 そうた</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
             </div>
-            <div class="child-card checked-out rounded-2xl border-2 p-4 text-center opacity-60">
-              <div class="mx-auto h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl mb-2">👧</div>
-              <p class="text-sm font-bold">佐藤 みく</p>
-              <p class="text-[10px] text-blue-500 mt-1">08:15 → 16:30 🏠</p>
+            <div class="child-card checked-out rounded-2xl border-2 p-3 sm:p-4 text-center opacity-60">
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-blue-100 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👧</div>
+              <p class="text-xs sm:text-sm font-bold">佐藤 みく</p>
+              <p class="text-[9px] sm:text-[10px] text-blue-500 mt-1">08:15 → 16:30 🏠</p>
             </div>
-            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
-              <div class="mx-auto h-16 w-16 rounded-full bg-yellow-50 flex items-center justify-center text-3xl mb-2">👧</div>
-              <p class="text-sm font-bold">小林 ひな</p>
-              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-3 sm:p-4 text-center">
+              <div class="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-yellow-50 flex items-center justify-center text-2xl sm:text-3xl mb-1 sm:mb-2">👧</div>
+              <p class="text-xs sm:text-sm font-bold">小林 ひな</p>
+              <p class="text-[9px] sm:text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
             </div>
           </div>
         </div>
 
         <!-- Contact Book Tab -->
         <div id="tab-contactbook" class="hidden">
-          <h1 class="text-2xl font-bold mb-6">📖 連絡帳</h1>
+          <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">📖 連絡帳</h1>
+
+          <!-- Mobile: Horizontal child selector -->
+          <div class="lg:hidden flex gap-2 mb-4 overflow-x-auto pb-1">
+            <button class="shrink-0 flex items-center gap-2 bg-primary-50 border-2 border-primary-300 rounded-2xl px-3 py-2">
+              <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">😊</div>
+              <div class="text-left"><p class="text-xs font-bold">田中 はな</p><p class="text-[9px] text-gray-400">🌸 さくら組</p></div>
+              <span class="text-[9px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">🤖 AI</span>
+            </button>
+            <button class="shrink-0 flex items-center gap-2 bg-white border rounded-2xl px-3 py-2">
+              <div class="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-sm">😐</div>
+              <div class="text-left"><p class="text-xs font-bold">鈴木 ゆうと</p><p class="text-[9px] text-gray-400">🌸 さくら組</p></div>
+            </button>
+            <button class="shrink-0 flex items-center gap-2 bg-white border rounded-2xl px-3 py-2">
+              <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">😄</div>
+              <div class="text-left"><p class="text-xs font-bold">佐藤 みく</p><p class="text-[9px] text-gray-400">🐰 うさぎ組</p></div>
+            </button>
+          </div>
+
           <div class="grid lg:grid-cols-3 gap-4">
-            <div class="lg:col-span-1 space-y-2">
+            <!-- PC: Sidebar list -->
+            <div class="hidden lg:block lg:col-span-1 space-y-2">
               <div class="bg-white rounded-xl border p-3 border-primary-300">
                 <div class="flex items-center gap-2">
-                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">&#x1F60A;</div>
-                  <div><p class="text-sm font-medium">田中 はな</p><p class="text-[10px] text-gray-400">さくら組 &middot; 3歳</p></div>
-                  <span class="ml-auto text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">AI生成</span>
+                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">😊</div>
+                  <div><p class="text-sm font-medium">田中 はな</p><p class="text-[10px] text-gray-400">🌸 さくら組 · 3歳</p></div>
+                  <span class="ml-auto text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">🤖 AI生成</span>
                 </div>
               </div>
               <div class="bg-white rounded-xl border p-3 hover:border-gray-300 cursor-pointer">
                 <div class="flex items-center gap-2">
-                  <div class="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-sm">&#x1F610;</div>
-                  <div><p class="text-sm font-medium">鈴木 ゆうと</p><p class="text-[10px] text-gray-400">さくら組 &middot; 3歳</p></div>
+                  <div class="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-sm">😐</div>
+                  <div><p class="text-sm font-medium">鈴木 ゆうと</p><p class="text-[10px] text-gray-400">🌸 さくら組 · 3歳</p></div>
                 </div>
               </div>
               <div class="bg-white rounded-xl border p-3 hover:border-gray-300 cursor-pointer">
                 <div class="flex items-center gap-2">
-                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">&#x1F604;</div>
-                  <div><p class="text-sm font-medium">佐藤 みく</p><p class="text-[10px] text-gray-400">うさぎ組 &middot; 2歳</p></div>
+                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">😄</div>
+                  <div><p class="text-sm font-medium">佐藤 みく</p><p class="text-[10px] text-gray-400">🐰 うさぎ組 · 2歳</p></div>
                 </div>
               </div>
             </div>
-            <div class="lg:col-span-2 bg-white rounded-xl border p-6">
+
+            <!-- Contact book detail -->
+            <div class="lg:col-span-2 bg-white rounded-2xl border p-4 sm:p-6">
               <div class="flex items-center gap-3 mb-4">
-                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-xl">&#x1F60A;</div>
-                <div>
-                  <p class="font-medium">田中 はなちゃんの連絡帳</p>
-                  <p class="text-xs text-gray-400">2026年3月19日 &middot; さくら組</p>
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-xl">😊</div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-sm sm:text-base">田中 はなちゃんの連絡帳 🌸</p>
+                  <p class="text-[10px] sm:text-xs text-gray-400">2026年3月19日 · さくら組</p>
                 </div>
-                <span class="ml-auto text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-full">🤖✨ AI自動生成</span>
+                <span class="shrink-0 text-[10px] sm:text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-full">🤖✨ AI自動生成</span>
               </div>
-              <div class="space-y-4 text-sm">
-                <div class="grid grid-cols-2 gap-4">
-                  <div><p class="text-xs text-gray-500 mb-1">機嫌</p><p class="font-medium">&#x1F60A; 元気</p></div>
-                  <div><p class="text-xs text-gray-500 mb-1">お昼寝</p><p class="font-medium">12:30〜14:00（よく眠れた）</p></div>
+              <div class="space-y-3 sm:space-y-4 text-sm">
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div class="bg-green-50 rounded-xl p-3">
+                    <p class="text-[10px] sm:text-xs text-gray-500 mb-1">😊 機嫌</p>
+                    <p class="font-medium text-sm">元気いっぱい</p>
+                  </div>
+                  <div class="bg-blue-50 rounded-xl p-3">
+                    <p class="text-[10px] sm:text-xs text-gray-500 mb-1">💤 お昼寝</p>
+                    <p class="font-medium text-sm">12:30〜14:00</p>
+                  </div>
                 </div>
-                <div><p class="text-xs text-gray-500 mb-1">食事</p>
-                  <div class="flex gap-4"><span>朝食: <strong>完食</strong></span><span>昼食: <strong>ほぼ完食</strong></span><span>おやつ: <strong>完食</strong></span></div>
+                <div class="bg-yellow-50 rounded-xl p-3">
+                  <p class="text-[10px] sm:text-xs text-gray-500 mb-1">🍚 食事</p>
+                  <div class="flex flex-wrap gap-3 text-sm"><span>朝食: <strong>完食</strong> ✨</span><span>昼食: <strong>ほぼ完食</strong></span><span>おやつ: <strong>完食</strong> ✨</span></div>
                 </div>
-                <div><p class="text-xs text-gray-500 mb-1">活動内容</p><p class="text-gray-700 leading-relaxed">今日はお外遊びで砂場でお城を作りました。お友達と一緒に協力して大きなお城を完成させることができました。とても嬉しそうでした。午後はお絵かきの時間で、お花の絵を描いていました。</p></div>
+                <div>
+                  <p class="text-[10px] sm:text-xs text-gray-500 mb-1">📝 活動内容</p>
+                  <p class="text-gray-700 leading-relaxed text-xs sm:text-sm">今日はお外遊びで砂場でお城を作りました 🏰 お友達と一緒に協力して大きなお城を完成させることができました。とても嬉しそうでした 😊 午後はお絵かきの時間で、お花の絵を描いていました 🎨</p>
+                </div>
               </div>
             </div>
           </div>
@@ -254,58 +367,174 @@
 
         <!-- Classes Tab -->
         <div id="tab-classes" class="hidden">
-          <h1 class="text-2xl font-bold mb-6">🏫 クラス管理</h1>
-          <p class="text-sm text-gray-500 mb-4">2026年度</p>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">ひよこ組</h3><span class="text-xs bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full">0歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 6名 &middot; 在籍: 4名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 佐藤先生</p><p>&#x1F469; 副担任: 高橋先生</p></div></div>
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">りす組</h3><span class="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">1歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 8名 &middot; 在籍: 6名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 田中先生</p></div></div>
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">うさぎ組</h3><span class="text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-full">2歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 10名 &middot; 在籍: 8名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 山田先生</p><p>&#x1F469; 副担任: 小林先生</p></div></div>
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">さくら組</h3><span class="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">3歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 12名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 伊藤先生</p></div></div>
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">ひまわり組</h3><span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">4歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 14名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 渡辺先生</p><p>&#x1F469; 副担任: 中村先生</p></div></div>
-            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">そら組</h3><span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">5歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 13名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 佐藤先生（兼任）</p><p>&#x1F469; 副担任: 鈴木先生</p></div></div>
+          <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">🏫 クラス管理</h1>
+          <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">📅 2026年度</p>
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">🐣 ひよこ組</h3>
+                <span class="text-[10px] sm:text-xs bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full">0歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 6名 · 在籍: 4名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 佐藤先生</p>
+                <p>👩 副担任: 高橋先生</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">🐿️ りす組</h3>
+                <span class="text-[10px] sm:text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">1歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 8名 · 在籍: 6名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 田中先生</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">🐰 うさぎ組</h3>
+                <span class="text-[10px] sm:text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-full">2歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 10名 · 在籍: 8名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 山田先生</p>
+                <p>👩 副担任: 小林先生</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">🌸 さくら組</h3>
+                <span class="text-[10px] sm:text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">3歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 15名 · 在籍: 12名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 伊藤先生</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">🌻 ひまわり組</h3>
+                <span class="text-[10px] sm:text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">4歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 15名 · 在籍: 14名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 渡辺先生</p>
+                <p>👩 副担任: 中村先生</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-2xl border p-3 sm:p-5">
+              <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <h3 class="font-bold text-sm sm:text-base">☁️ そら組</h3>
+                <span class="text-[10px] sm:text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">5歳児</span>
+              </div>
+              <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">定員: 15名 · 在籍: 13名</p>
+              <div class="text-[10px] sm:text-xs text-gray-400">
+                <p>👩‍🏫 担任: 佐藤先生（兼任）</p>
+                <p>👩 副担任: 鈴木先生</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Staff Tab -->
         <div id="tab-staff" class="hidden">
-          <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold">👩‍🏫 スタッフ管理</h1>
-            <button class="bg-primary-500 text-white text-sm px-4 py-2.5 rounded-xl hover:bg-primary-600 transition-colors shadow-sm">➕ スタッフを招待</button>
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h1 class="text-xl sm:text-2xl font-bold">👩‍🏫 スタッフ管理</h1>
+            <button class="bg-primary-500 text-white text-[10px] sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl hover:bg-primary-600 transition-colors shadow-sm">➕ 招待</button>
           </div>
-          <div class="bg-white rounded-xl border">
-            <div class="divide-y">
-              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">&#x1F469;&#x200D;&#x1F3EB;</div><div class="flex-1"><p class="font-medium text-sm">佐藤 美咲</p><p class="text-xs text-gray-400">sato@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span><span class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">園全体</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひよこ組(担任)</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">そら組(担任)</span></div></div><span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">管理者</span></div>
-              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center">&#x1F469;</div><div class="flex-1"><p class="font-medium text-sm">山田 花子</p><p class="text-xs text-gray-400">yamada@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">うさぎ組(担任)</span></div></div></div>
-              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">&#x1F469;</div><div class="flex-1"><p class="font-medium text-sm">高橋 みどり</p><p class="text-xs text-gray-400">takahashi@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">パート</span><span class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">担当クラスのみ</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひよこ組(副担任)</span></div></div></div>
-              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">&#x1F468;</div><div class="flex-1"><p class="font-medium text-sm">中村 太郎</p><p class="text-xs text-gray-400">nakamura@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">契約</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひまわり組(副担任)</span></div></div></div>
+          <div class="space-y-3 sm:space-y-0">
+            <!-- Mobile: Card layout / PC: List layout -->
+            <div class="bg-white rounded-2xl sm:rounded-xl border sm:divide-y">
+              <div class="p-4">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-lg">👩‍🏫</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <p class="font-medium text-sm">佐藤 美咲</p>
+                      <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">👑 管理者</span>
+                    </div>
+                    <p class="text-[10px] sm:text-xs text-gray-400 truncate">sato@example.com</p>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      <span class="text-[9px] sm:text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span>
+                      <span class="text-[9px] sm:text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">🏫 園全体</span>
+                      <span class="text-[9px] sm:text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">🐣 ひよこ組</span>
+                      <span class="text-[9px] sm:text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">☁️ そら組</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4 border-t sm:border-t-0">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center text-lg">👩</div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm">山田 花子</p>
+                    <p class="text-[10px] sm:text-xs text-gray-400 truncate">yamada@example.com</p>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      <span class="text-[9px] sm:text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span>
+                      <span class="text-[9px] sm:text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">🐰 うさぎ組(担任)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4 border-t sm:border-t-0">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-lg">👩</div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm">高橋 みどり</p>
+                    <p class="text-[10px] sm:text-xs text-gray-400 truncate">takahashi@example.com</p>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      <span class="text-[9px] sm:text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">パート</span>
+                      <span class="text-[9px] sm:text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">担当クラスのみ</span>
+                      <span class="text-[9px] sm:text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">🐣 ひよこ組(副担任)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4 border-t sm:border-t-0">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-lg">👨</div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm">中村 太郎</p>
+                    <p class="text-[10px] sm:text-xs text-gray-400 truncate">nakamura@example.com</p>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      <span class="text-[9px] sm:text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">契約</span>
+                      <span class="text-[9px] sm:text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">🌻 ひまわり組(副担任)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Photos Tab -->
         <div id="tab-photos" class="hidden">
-          <h1 class="text-2xl font-bold mb-6">📸 写真ギャラリー</h1>
-          <div class="bg-white rounded-2xl border p-4 mb-4 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 flex items-center gap-3">
+          <h1 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">📸 写真ギャラリー</h1>
+          <div class="bg-white rounded-2xl border p-3 sm:p-4 mb-3 sm:mb-4 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 flex items-center gap-3">
             <span class="text-xl sparkle">🤖</span>
-            <div><p class="text-sm font-medium">✨ AI顔認識が有効です</p><p class="text-xs text-gray-500">園児ごとに自動分類されます</p></div>
-            <span class="ml-auto text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">🟢 稼働中</span>
-          </div>
-          <div class="bg-white rounded-xl border p-4 mb-4 flex items-center gap-4">
-            <span class="text-sm text-gray-600">閲覧: <strong>4K</strong> | DL: <strong>4K</strong></span>
-            <span class="ml-auto text-sm text-green-600 font-medium">DL無制限</span>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 aspect-[4/3] flex items-center justify-center relative">
-              <span class="text-5xl">&#x1F3DE;</span>
-              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs sm:text-sm font-medium">✨ AI顔認識が有効です</p>
+              <p class="text-[10px] sm:text-xs text-gray-500">園児ごとに自動分類されます</p>
             </div>
-            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-green-100 to-emerald-100 aspect-[4/3] flex items-center justify-center relative">
-              <span class="text-5xl">&#x1F333;</span>
-              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            <span class="shrink-0 text-[10px] sm:text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">🟢 稼働中</span>
+          </div>
+          <div class="bg-white rounded-xl border p-3 sm:p-4 mb-3 sm:mb-4 flex items-center gap-4">
+            <span class="text-xs sm:text-sm text-gray-600">🖼️ 閲覧: <strong>4K</strong> | ⬇️ DL: <strong>4K</strong></span>
+            <span class="ml-auto text-xs sm:text-sm text-green-600 font-medium">♾️ DL無制限</span>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+            <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-4xl sm:text-5xl">🏞️</span>
+              <span class="absolute top-2 right-2 text-[9px] sm:text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">✨ AI分類済み</span>
             </div>
-            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 aspect-[4/3] flex items-center justify-center relative">
-              <span class="text-5xl">&#x1F3A8;</span>
-              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-green-100 to-emerald-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-4xl sm:text-5xl">🌳</span>
+              <span class="absolute top-2 right-2 text-[9px] sm:text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">✨ AI分類済み</span>
+            </div>
+            <div class="rounded-2xl overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-4xl sm:text-5xl">🎨</span>
+              <span class="absolute top-2 right-2 text-[9px] sm:text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">✨ AI分類済み</span>
             </div>
           </div>
         </div>
@@ -313,20 +542,79 @@
     </main>
   </div>
 
+  <!-- Mobile Bottom Navigation -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50 px-1 py-1 safe-area-bottom">
+    <div class="grid grid-cols-7 gap-0">
+      <button class="mobile-nav-item active flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="dashboard">
+        <span class="text-base">📊</span>
+        <span class="nav-label">ホーム</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="attendance">
+        <span class="text-base">📋</span>
+        <span class="nav-label">出欠</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="touchpanel">
+        <span class="text-base">🖥️</span>
+        <span class="nav-label">パネル</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="contactbook">
+        <span class="text-base">📖</span>
+        <span class="nav-label">連絡帳</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="classes">
+        <span class="text-base">🏫</span>
+        <span class="nav-label">クラス</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="staff">
+        <span class="text-base">👩‍🏫</span>
+        <span class="nav-label">職員</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-0.5 py-1.5 rounded-xl text-gray-400 text-[9px]" data-tab="photos">
+        <span class="text-base">📸</span>
+        <span class="nav-label">写真</span>
+      </button>
+    </div>
+  </nav>
+
   <script>
-    document.querySelectorAll('[data-tab]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        const tab = btn.dataset.tab;
-        document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
-        document.getElementById('tab-' + tab)?.classList.remove('hidden');
-        document.querySelectorAll('[data-tab]').forEach(b => {
-          b.classList.remove('bg-primary-50','text-primary-600','font-medium');
-          b.classList.add('text-gray-600');
-        });
-        btn.classList.add('bg-primary-50','text-primary-600','font-medium');
-        btn.classList.remove('text-gray-600');
+    function switchTab(tab) {
+      document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tab)?.classList.remove('hidden');
+
+      // Update sidebar (PC)
+      document.querySelectorAll('aside [data-tab]').forEach(b => {
+        b.classList.remove('bg-primary-50','text-primary-600','font-medium');
+        b.classList.add('text-gray-600');
       });
+      const sideBtn = document.querySelector('aside [data-tab="' + tab + '"]');
+      if (sideBtn) {
+        sideBtn.classList.add('bg-primary-50','text-primary-600','font-medium');
+        sideBtn.classList.remove('text-gray-600');
+      }
+
+      // Update mobile nav
+      document.querySelectorAll('.mobile-nav-item').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-gray-400');
+      });
+      const mobileBtn = document.querySelector('.mobile-nav-item[data-tab="' + tab + '"]');
+      if (mobileBtn) {
+        mobileBtn.classList.add('active');
+        mobileBtn.classList.remove('text-gray-400');
+      }
+
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    // PC sidebar clicks
+    document.querySelectorAll('aside [data-tab]').forEach(btn => {
+      btn.addEventListener('click', e => { e.preventDefault(); switchTab(btn.dataset.tab); });
+    });
+
+    // Mobile nav clicks
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
   </script>
 </body>

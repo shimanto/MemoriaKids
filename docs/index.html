@@ -41,10 +41,10 @@
 
   <!-- Header -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 sm:h-16">
       <div class="flex items-center gap-2">
-        <span class="text-2xl sparkle">🧸</span>
-        <span class="text-xl font-bold text-primary-500">MemoriaKids</span>
+        <span class="text-xl sm:text-2xl sparkle">🧸</span>
+        <span class="text-lg sm:text-xl font-bold text-primary-500">MemoriaKids</span>
       </div>
       <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
         <a href="#features" class="hover:text-primary-500 transition-colors">✨ 機能</a>
@@ -52,9 +52,24 @@
         <a href="#demo" class="hover:text-primary-500 transition-colors">🎮 デモ</a>
         <a href="#security" class="hover:text-primary-500 transition-colors">🛡️ セキュリティ</a>
       </nav>
-      <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-3">
         <a href="demo/admin.html" class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors">👩‍🏫 管理デモ</a>
         <a href="demo/parent.html" class="text-sm font-medium bg-primary-500 text-white px-4 py-2 rounded-xl hover:bg-primary-600 shadow-md shadow-primary-500/20 transition-all hover:shadow-lg">📱 保護者デモ</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+        <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <!-- Mobile dropdown menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t px-4 pb-4 pt-2 space-y-2">
+      <a href="#features" class="block py-2 text-sm text-gray-600 hover:text-primary-500" onclick="document.getElementById('mobile-menu').classList.add('hidden')">✨ 機能</a>
+      <a href="#plans" class="block py-2 text-sm text-gray-600 hover:text-primary-500" onclick="document.getElementById('mobile-menu').classList.add('hidden')">💎 料金</a>
+      <a href="#demo" class="block py-2 text-sm text-gray-600 hover:text-primary-500" onclick="document.getElementById('mobile-menu').classList.add('hidden')">🎮 デモ</a>
+      <a href="#security" class="block py-2 text-sm text-gray-600 hover:text-primary-500" onclick="document.getElementById('mobile-menu').classList.add('hidden')">🛡️ セキュリティ</a>
+      <div class="flex gap-2 pt-2 border-t">
+        <a href="demo/admin.html" class="flex-1 text-center text-sm font-medium text-primary-500 border border-primary-500 px-3 py-2.5 rounded-xl">👩‍🏫 管理デモ</a>
+        <a href="demo/parent.html" class="flex-1 text-center text-sm font-medium bg-primary-500 text-white px-3 py-2.5 rounded-xl">📱 保護者デモ</a>
       </div>
     </div>
   </header>
@@ -74,22 +89,22 @@
           <span class="sparkle">🌟</span>
           保育園ICT化の新しいカタチ
         </div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 sm:mb-6">
           保育を もっと<br>
           <span class="gradient-text">あたたかく</span>スマートに。
         </h1>
-        <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+        <p class="text-sm sm:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
           MemoriaKidsは出欠管理・連絡帳・成長記録・写真共有をひとつにまとめた<br class="hidden sm:inline">
-          保育園向け総合DXプラットフォームです。<br>
+          保育園向け総合DXプラットフォームです。<br class="hidden sm:inline">
           保育士の業務負担を軽減し、保護者との絆をより深めます。
         </p>
         <div class="flex flex-wrap gap-4">
-          <a href="demo/admin.html" class="inline-flex items-center gap-2 bg-primary-500 text-white px-7 py-3.5 rounded-2xl font-medium hover:bg-primary-600 shadow-lg shadow-primary-500/25 transition-all hover:scale-105 hover:shadow-xl">
-            👩‍🏫 管理者デモを見る
+          <a href="demo/admin.html" class="inline-flex items-center gap-2 bg-primary-500 text-white px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl text-sm sm:text-base font-medium hover:bg-primary-600 shadow-lg shadow-primary-500/25 transition-all hover:scale-105 hover:shadow-xl">
+            👩‍🏫 管理者デモ
             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 5l7 7-7 7"/></svg>
           </a>
-          <a href="demo/parent.html" class="inline-flex items-center gap-2 bg-white text-gray-700 px-7 py-3.5 rounded-2xl font-medium border-2 border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all hover:scale-105 hover:shadow-lg">
-            📱 保護者アプリを見る
+          <a href="demo/parent.html" class="inline-flex items-center gap-2 bg-white text-gray-700 px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl text-sm sm:text-base font-medium border-2 border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all hover:scale-105 hover:shadow-lg">
+            📱 保護者アプリ
           </a>
         </div>
       </div>
@@ -145,10 +160,10 @@
   </section>
 
   <!-- Features -->
-  <section id="features" class="py-20 px-4 bg-gray-50">
+  <section id="features" class="py-12 sm:py-20 px-4 bg-gray-50">
     <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold mb-4">🎀 オールインワンの保育ICTサービス</h2>
+      <div class="text-center mb-8 sm:mb-16">
+        <h2 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">🎀 オールインワンの保育ICTサービス</h2>
         <p class="text-gray-500 max-w-2xl mx-auto">日々の業務からAI活用まで、保育園に必要な全てをひとつに 🌟</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -210,10 +225,10 @@
   </section>
 
   <!-- Plans -->
-  <section id="plans" class="py-20 px-4">
+  <section id="plans" class="py-12 sm:py-20 px-4">
     <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold mb-4">💎 料金プラン</h2>
+      <div class="text-center mb-8 sm:mb-16">
+        <h2 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">💎 料金プラン</h2>
         <p class="text-gray-500">園の規模に合わせて選べる4つのプラン 🌈</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -267,18 +282,18 @@
   </section>
 
   <!-- Demo Section -->
-  <section id="demo" class="py-20 px-4 bg-gradient-to-br from-primary-50 via-white to-yellow-50">
+  <section id="demo" class="py-12 sm:py-20 px-4 bg-gradient-to-br from-primary-50 via-white to-yellow-50">
     <div class="max-w-7xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-4">🎮 デモ画面を体験</h2>
-      <p class="text-gray-500 mb-12">実際の操作画面をご確認いただけます ✨</p>
+      <h2 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">🎮 デモ画面を体験</h2>
+      <p class="text-gray-500 mb-6 sm:mb-12">実際の操作画面をご確認いただけます ✨</p>
       <div class="grid sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
-        <a href="demo/admin.html" class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-left">
+        <a href="demo/admin.html" class="card-hover bg-white rounded-2xl p-5 sm:p-8 border border-gray-100 text-left">
           <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center text-3xl mb-4 shadow-sm">💻</div>
           <h3 class="text-xl font-bold mb-2">👩‍🏫 管理者画面デモ</h3>
           <p class="text-sm text-gray-500 mb-4">園のスタッフ・管理者が使う画面です。出欠管理、クラス管理、スタッフ管理、連絡帳作成の操作を体験できます。</p>
           <span class="text-primary-500 text-sm font-medium">デモを見る &rarr;</span>
         </a>
-        <a href="demo/parent.html" class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-left">
+        <a href="demo/parent.html" class="card-hover bg-white rounded-2xl p-5 sm:p-8 border border-gray-100 text-left">
           <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center text-3xl mb-4 shadow-sm">📱</div>
           <h3 class="text-xl font-bold mb-2">👨‍👩‍👧 保護者アプリデモ</h3>
           <p class="text-sm text-gray-500 mb-4">保護者が使うアプリ画面です。連絡帳の確認、写真ギャラリー、成長記録の閲覧を体験できます。</p>
@@ -289,10 +304,10 @@
   </section>
 
   <!-- Security -->
-  <section id="security" class="py-20 px-4">
+  <section id="security" class="py-12 sm:py-20 px-4">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4">🛡️ 安心のセキュリティ</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">🛡️ 安心のセキュリティ</h2>
         <p class="text-gray-500">保育園の大切なデータを安全に守ります 💪</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
