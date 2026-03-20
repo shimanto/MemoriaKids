@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoriaKids - 保育園DXプラットフォーム</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#fef3f0', 100:'#fde4db', 200:'#fbc9b7', 300:'#f7a589', 400:'#f2785a', 500:'#ea5a2e', 600:'#d44422', 700:'#b0351b', 800:'#8e2e1b', 900:'#79291c' },
+            nursery: { green:'#4ade80', yellow:'#fbbf24', purple:'#a78bfa', pink:'#f472b6', blue:'#60a5fa' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧸</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Noto Sans JP', sans-serif; }
+    .hero-gradient { background: linear-gradient(135deg, #fef3f0 0%, #fff5f5 30%, #fef9e7 60%, #f0fdf4 100%); }
+    .float-animation { animation: float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    .card-hover { transition: all 0.3s; }
+    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(234,90,46,0.12); }
+    .sparkle { animation: sparkle 2s ease-in-out infinite; }
+    @keyframes sparkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
+    .bounce-gentle { animation: bounceGentle 3s ease-in-out infinite; }
+    @keyframes bounceGentle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .wiggle { animation: wiggle 4s ease-in-out infinite; }
+    @keyframes wiggle { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(3deg)} 75%{transform:rotate(-3deg)} }
+    .deco-float { position: absolute; pointer-events: none; font-size: 2rem; opacity: 0.15; animation: decoFloat 8s ease-in-out infinite; }
+    @keyframes decoFloat { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-15px) rotate(10deg)} 66%{transform:translateY(5px) rotate(-5deg)} }
+    .gradient-text { background: linear-gradient(135deg, #ea5a2e, #f472b6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl sparkle">🧸</span>
+        <span class="text-xl font-bold text-primary-500">MemoriaKids</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+        <a href="#features" class="hover:text-primary-500 transition-colors">✨ 機能</a>
+        <a href="#plans" class="hover:text-primary-500 transition-colors">💎 料金</a>
+        <a href="#demo" class="hover:text-primary-500 transition-colors">🎮 デモ</a>
+        <a href="#security" class="hover:text-primary-500 transition-colors">🛡️ セキュリティ</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="demo/admin.html" class="text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors">👩‍🏫 管理デモ</a>
+        <a href="demo/parent.html" class="text-sm font-medium bg-primary-500 text-white px-4 py-2 rounded-xl hover:bg-primary-600 shadow-md shadow-primary-500/20 transition-all hover:shadow-lg">📱 保護者デモ</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-gradient pt-32 pb-20 px-4 relative overflow-hidden">
+    <!-- Floating decorations -->
+    <span class="deco-float top-24 left-[5%]" style="animation-delay:0s">🌸</span>
+    <span class="deco-float top-40 right-[8%]" style="animation-delay:2s">🌈</span>
+    <span class="deco-float top-60 left-[15%]" style="animation-delay:4s">🎨</span>
+    <span class="deco-float top-32 right-[20%]" style="animation-delay:1s">⭐</span>
+    <span class="deco-float top-72 right-[12%]" style="animation-delay:3s">🧩</span>
+    <span class="deco-float top-52 left-[8%]" style="animation-delay:5s">🎵</span>
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-4 py-2 rounded-full mb-6 shadow-sm">
+          <span class="sparkle">🌟</span>
+          保育園ICT化の新しいカタチ
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">
+          保育を もっと<br>
+          <span class="gradient-text">あたたかく</span>スマートに。
+        </h1>
+        <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+          MemoriaKidsは出欠管理・連絡帳・成長記録・写真共有をひとつにまとめた<br class="hidden sm:inline">
+          保育園向け総合DXプラットフォームです。<br>
+          保育士の業務負担を軽減し、保護者との絆をより深めます。
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="demo/admin.html" class="inline-flex items-center gap-2 bg-primary-500 text-white px-7 py-3.5 rounded-2xl font-medium hover:bg-primary-600 shadow-lg shadow-primary-500/25 transition-all hover:scale-105 hover:shadow-xl">
+            👩‍🏫 管理者デモを見る
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="demo/parent.html" class="inline-flex items-center gap-2 bg-white text-gray-700 px-7 py-3.5 rounded-2xl font-medium border-2 border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all hover:scale-105 hover:shadow-lg">
+            📱 保護者アプリを見る
+          </a>
+        </div>
+      </div>
+      <div class="relative float-animation">
+        <!-- Decorative elements around device -->
+        <span class="absolute -top-4 -left-4 text-3xl wiggle" style="animation-delay:0s">🌼</span>
+        <span class="absolute -top-2 -right-6 text-2xl bounce-gentle" style="animation-delay:1s">🦋</span>
+        <span class="absolute -bottom-4 -left-6 text-2xl wiggle" style="animation-delay:2s">🐣</span>
+        <span class="absolute -bottom-2 -right-4 text-3xl bounce-gentle" style="animation-delay:0.5s">🌱</span>
+        <!-- Mock device frame -->
+        <div class="bg-white rounded-3xl shadow-2xl p-3 max-w-sm mx-auto border border-gray-100">
+          <div class="bg-gradient-to-br from-primary-50 via-pink-50 to-orange-50 rounded-2xl p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-lg sparkle">🧸</span>
+              <span class="font-bold text-primary-500 text-sm">MemoriaKids</span>
+              <span class="ml-auto text-xs text-gray-400">9:42</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-3">
+              <p class="text-xs text-gray-500 mb-1">🏫 本日の出席</p>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-bold text-green-500">24</span>
+                <span class="text-sm text-gray-400">/ 28名</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              <div class="bg-white rounded-xl p-2.5 text-center shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                <div class="text-xl mb-0.5">📋</div>
+                <p class="text-[10px] text-gray-600 font-medium">出欠</p>
+              </div>
+              <div class="bg-white rounded-xl p-2.5 text-center shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                <div class="text-xl mb-0.5">📖</div>
+                <p class="text-[10px] text-gray-600 font-medium">連絡帳</p>
+              </div>
+              <div class="bg-white rounded-xl p-2.5 text-center shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                <div class="text-xl mb-0.5">📸</div>
+                <p class="text-[10px] text-gray-600 font-medium">写真</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-3 shadow-sm">
+              <p class="text-xs font-medium text-gray-700 mb-2">📝 最新の連絡帳</p>
+              <div class="flex items-center gap-2">
+                <div class="h-8 w-8 rounded-full bg-nursery-green/20 flex items-center justify-center text-sm">😊</div>
+                <div>
+                  <p class="text-xs font-medium">田中 はなちゃん 🌸</p>
+                  <p class="text-[10px] text-gray-400">元気に砂場で遊びました 🏰</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 px-4 bg-gray-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold mb-4">🎀 オールインワンの保育ICTサービス</h2>
+        <p class="text-gray-500 max-w-2xl mx-auto">日々の業務からAI活用まで、保育園に必要な全てをひとつに 🌟</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature cards -->
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-2xl mb-4 shadow-sm">🚸</div>
+          <h3 class="font-bold text-lg mb-2">🏫 登降園管理</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">QRコード・タッチパネルでかんたん打刻。クラス別リアルタイム表示。兄弟一括登園にも対応。</p>
+          <div class="flex flex-wrap gap-1 mt-3">
+            <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full">QRコード</span>
+            <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full">タッチパネル</span>
+            <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full">兄弟一括</span>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-50 to-sky-100 flex items-center justify-center text-2xl mb-4 shadow-sm">📖</div>
+          <h3 class="font-bold text-lg mb-2">✏️ デジタル連絡帳</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">食事・お昼寝・活動を記録。音声AIで会議メモから自動生成。保護者とリアルタイムで共有。</p>
+          <div class="flex flex-wrap gap-1 mt-3">
+            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">音声AI自動生成</span>
+            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">写真付き</span>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center text-2xl mb-4 shadow-sm">📸</div>
+          <h3 class="font-bold text-lg mb-2">🤖 写真共有 + AI顔認識</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">AI顔認識で園児ごとに自動分類。保護者は我が子の写真だけ閲覧・ダウンロード。プラン別画質対応。</p>
+          <div class="flex flex-wrap gap-1 mt-3">
+            <span class="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">AI顔認識</span>
+            <span class="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">4K/8K対応</span>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center text-2xl mb-4 shadow-sm">📈</div>
+          <h3 class="font-bold text-lg mb-2">🌱 成長記録</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">身長・体重・頭囲の推移をグラフで可視化。発達のマイルストーンも記録・共有。</p>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center text-2xl mb-4 shadow-sm">🏠</div>
+          <h3 class="font-bold text-lg mb-2">👨‍👩‍👧 クラス・スタッフ管理</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">0歳児〜6歳児のクラス分け。担任・副担任配置。年度更新（進級処理）も一括で。</p>
+          <div class="flex flex-wrap gap-1 mt-3">
+            <span class="text-[10px] bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full">兼任対応</span>
+            <span class="text-[10px] bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full">招待リンク</span>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-100">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-100 flex items-center justify-center text-2xl mb-4 shadow-sm">🔐</div>
+          <h3 class="font-bold text-lg mb-2">🔑 マルチ認証</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">LINE・Apple・Googleログイン対応。保護者はいつものアカウントでかんたんアクセス。</p>
+          <div class="flex flex-wrap gap-1 mt-3">
+            <span class="text-[10px] bg-green-50 text-green-700 px-2 py-0.5 rounded-full">LINE</span>
+            <span class="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">Apple</span>
+            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Google</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plans -->
+  <section id="plans" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold mb-4">💎 料金プラン</h2>
+        <p class="text-gray-500">園の規模に合わせて選べる4つのプラン 🌈</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-200">
+          <p class="text-sm font-medium text-gray-500">🌱 Free</p>
+          <p class="text-3xl font-bold mt-1 mb-4">¥0</p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li>&#x2713; 園児5名まで</li>
+            <li>&#x2713; スタッフ2名</li>
+            <li>&#x2713; 基本出欠・連絡帳</li>
+            <li>&#x2713; 写真閲覧 480px</li>
+            <li>&#x2713; DL 10枚/月 (800px)</li>
+          </ul>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border border-gray-200">
+          <p class="text-sm font-medium text-gray-500">🌿 Basic</p>
+          <p class="text-3xl font-bold mt-1 mb-4">&#xA5;4,980<span class="text-sm font-normal text-gray-400">/月</span></p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li>&#x2713; 園児20名まで</li>
+            <li>&#x2713; スタッフ5名</li>
+            <li>&#x2713; 成長記録・写真共有</li>
+            <li>&#x2713; Full HD (1920px)</li>
+            <li>&#x2713; DL 100枚/月</li>
+          </ul>
+        </div>
+        <div class="card-hover bg-white rounded-2xl p-6 border-2 border-primary-500 relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-500 text-white text-xs font-medium px-3 py-1 rounded-full">⭐ 人気</div>
+          <p class="text-sm font-medium text-primary-500">🌸 Premium</p>
+          <p class="text-3xl font-bold mt-1 mb-4">&#xA5;9,980<span class="text-sm font-normal text-gray-400">/月</span></p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li>&#x2713; 園児50名まで</li>
+            <li>&#x2713; スタッフ15名</li>
+            <li>&#x2713; AI顔認識</li>
+            <li>&#x2713; 4K (3840px)</li>
+            <li>&#x2713; DL無制限</li>
+          </ul>
+        </div>
+        <div class="card-hover bg-gray-900 text-white rounded-2xl p-6">
+          <p class="text-sm font-medium text-gray-400">🏢 Enterprise</p>
+          <p class="text-3xl font-bold mt-1 mb-4">&#xA5;29,800<span class="text-sm font-normal text-gray-500">/月</span></p>
+          <ul class="space-y-2 text-sm text-gray-300">
+            <li>&#x2713; 園児無制限</li>
+            <li>&#x2713; スタッフ無制限</li>
+            <li>&#x2713; 8K原画・API連携</li>
+            <li>&#x2713; 複数園管理</li>
+            <li>&#x2713; カスタムブランド</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section id="demo" class="py-20 px-4 bg-gradient-to-br from-primary-50 via-white to-yellow-50">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-4">🎮 デモ画面を体験</h2>
+      <p class="text-gray-500 mb-12">実際の操作画面をご確認いただけます ✨</p>
+      <div class="grid sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <a href="demo/admin.html" class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-left">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center text-3xl mb-4 shadow-sm">💻</div>
+          <h3 class="text-xl font-bold mb-2">👩‍🏫 管理者画面デモ</h3>
+          <p class="text-sm text-gray-500 mb-4">園のスタッフ・管理者が使う画面です。出欠管理、クラス管理、スタッフ管理、連絡帳作成の操作を体験できます。</p>
+          <span class="text-primary-500 text-sm font-medium">デモを見る &rarr;</span>
+        </a>
+        <a href="demo/parent.html" class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-left">
+          <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center text-3xl mb-4 shadow-sm">📱</div>
+          <h3 class="text-xl font-bold mb-2">👨‍👩‍👧 保護者アプリデモ</h3>
+          <p class="text-sm text-gray-500 mb-4">保護者が使うアプリ画面です。連絡帳の確認、写真ギャラリー、成長記録の閲覧を体験できます。</p>
+          <span class="text-primary-500 text-sm font-medium">デモを見る &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section id="security" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">🛡️ 安心のセキュリティ</h2>
+        <p class="text-gray-500">保育園の大切なデータを安全に守ります 💪</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="h-12 w-12 mx-auto rounded-2xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-2xl mb-3 shadow-sm">🔒</div>
+          <h4 class="font-medium mb-1">SSL暗号化通信</h4>
+          <p class="text-xs text-gray-500">全通信をTLS 1.3で暗号化</p>
+        </div>
+        <div class="text-center">
+          <div class="h-12 w-12 mx-auto rounded-2xl bg-gradient-to-br from-blue-50 to-sky-100 flex items-center justify-center text-2xl mb-3 shadow-sm">🇯🇵</div>
+          <h4 class="font-medium mb-1">国内データ保管</h4>
+          <p class="text-xs text-gray-500">データは国内サーバーに保管</p>
+        </div>
+        <div class="text-center">
+          <div class="h-12 w-12 mx-auto rounded-2xl bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center text-2xl mb-3 shadow-sm">🔄</div>
+          <h4 class="font-medium mb-1">自動バックアップ</h4>
+          <p class="text-xs text-gray-500">毎日自動で安全にバックアップ</p>
+        </div>
+        <div class="text-center">
+          <div class="h-12 w-12 mx-auto rounded-2xl bg-gradient-to-br from-orange-50 to-amber-100 flex items-center justify-center text-2xl mb-3 shadow-sm">🏅</div>
+          <h4 class="font-medium mb-1">ISMS準拠</h4>
+          <p class="text-xs text-gray-500">国際基準のセキュリティ体制</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl sparkle">🧸</span>
+        <span class="text-lg font-bold text-white">MemoriaKids</span>
+      </div>
+      <p class="text-sm">🌸 &copy; 2026 MemoriaKids. All rights reserved. 🌸</p>
+    </div>
+  </footer>
+
+</body>
+</html>

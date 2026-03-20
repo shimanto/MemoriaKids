@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>保護者アプリデモ - MemoriaKids</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { primary: { 50:'#fef3f0',100:'#fde4db',500:'#ea5a2e',600:'#d44422' } } } }
+    }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧸</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Noto Sans JP', sans-serif; background: linear-gradient(135deg, #f8f4f0, #f0e6f6); }
+    .phone-frame { max-width: 390px; margin: 0 auto; min-height: 100vh; }
+    .bottom-nav-item.active { color: #ea5a2e; }
+    .bottom-nav-item.active .nav-dot { display: block; }
+    .sparkle { animation: sparkle 2s ease-in-out infinite; }
+    @keyframes sparkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.15)} }
+    .photo-card { transition: all 0.2s; }
+    .photo-card:hover { transform: scale(1.03); }
+  </style>
+</head>
+<body class="bg-gray-200">
+
+  <!-- Phone frame -->
+  <div class="phone-frame bg-white relative shadow-2xl">
+    <!-- Status bar -->
+    <div class="bg-white px-5 pt-2 pb-1 flex items-center justify-between text-xs text-gray-500">
+      <span>9:42</span>
+      <div class="flex items-center gap-1">
+        <span>&#x1F4F6;</span>
+        <span>&#x1F50B;</span>
+      </div>
+    </div>
+
+    <!-- App header -->
+    <div class="px-5 py-3 flex items-center justify-between border-b">
+      <div class="flex items-center gap-2">
+        <span class="text-lg sparkle">🧸</span>
+        <span class="font-bold text-primary-500 text-sm">MemoriaKids</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-400">田中家</span>
+        <div class="h-7 w-7 rounded-full bg-primary-100 flex items-center justify-center text-xs">&#x1F469;</div>
+      </div>
+    </div>
+
+    <!-- Tab content container -->
+    <div class="pb-20">
+      <!-- Home Tab -->
+      <div id="ptab-home" class="px-5 py-4">
+        <p class="text-lg font-bold mb-1">おはようございます、田中さん 👋🌸</p>
+        <p class="text-xs text-gray-500 mb-5">2026年3月19日（水）</p>
+
+        <!-- Children cards -->
+        <div class="space-y-3 mb-6">
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100">
+            <div class="flex items-center gap-3">
+              <div class="h-12 w-12 rounded-full bg-white shadow-sm flex items-center justify-center text-xl">👧</div>
+              <div class="flex-1">
+                <p class="font-bold text-sm">田中 はな</p>
+                <p class="text-xs text-gray-500">さくら組 &middot; 3歳</p>
+              </div>
+              <div class="text-right">
+                <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-[10px] font-medium px-2 py-1 rounded-full">
+                  &#x2705; 登園済み
+                </span>
+                <p class="text-[10px] text-gray-400 mt-0.5">08:42</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gradient-to-r from-blue-50 to-sky-50 rounded-2xl p-4 border border-blue-100">
+            <div class="flex items-center gap-3">
+              <div class="h-12 w-12 rounded-full bg-white shadow-sm flex items-center justify-center text-xl">👶</div>
+              <div class="flex-1">
+                <p class="font-bold text-sm">田中 そうた</p>
+                <p class="text-xs text-gray-500">ひよこ組 &middot; 0歳</p>
+              </div>
+              <div class="text-right">
+                <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-[10px] font-medium px-2 py-1 rounded-full">
+                  &#x2705; 登園済み
+                </span>
+                <p class="text-[10px] text-gray-400 mt-0.5">08:42（兄弟一括）</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="grid grid-cols-4 gap-2 mb-6">
+          <button class="bg-white border rounded-2xl p-3 text-center hover:bg-gray-50 hover:scale-105 transition-all" onclick="showTab('pcontact')">
+            <div class="text-2xl mb-0.5">📖</div>
+            <p class="text-[10px] text-gray-600 font-medium">連絡帳</p>
+          </button>
+          <button class="bg-white border rounded-2xl p-3 text-center hover:bg-gray-50 hover:scale-105 transition-all" onclick="showTab('pphotos')">
+            <div class="text-2xl mb-0.5">📸</div>
+            <p class="text-[10px] text-gray-600 font-medium">写真</p>
+          </button>
+          <button class="bg-white border rounded-2xl p-3 text-center hover:bg-gray-50 hover:scale-105 transition-all" onclick="showTab('pgrowth')">
+            <div class="text-2xl mb-0.5">🌱</div>
+            <p class="text-[10px] text-gray-600 font-medium">成長記録</p>
+          </button>
+          <button class="bg-white border rounded-2xl p-3 text-center hover:bg-gray-50 hover:scale-105 transition-all">
+            <div class="text-2xl mb-0.5">🔔</div>
+            <p class="text-[10px] text-gray-600 font-medium">お知らせ</p>
+          </button>
+        </div>
+
+        <!-- Today's contact book preview -->
+        <div class="mb-4">
+          <p class="text-sm font-bold mb-3">📝 今日の連絡帳</p>
+          <div class="bg-white rounded-2xl border p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">&#x1F60A;</div>
+              <div>
+                <p class="text-sm font-medium">はなちゃん</p>
+                <p class="text-[10px] text-gray-400">さくら組 &middot; 伊藤先生</p>
+              </div>
+              <span class="ml-auto text-[10px] text-gray-400">15:30</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              <div class="text-center bg-green-50 rounded-lg py-1.5">
+                <p class="text-[10px] text-gray-500">機嫌</p>
+                <p class="text-sm">&#x1F60A; 元気</p>
+              </div>
+              <div class="text-center bg-yellow-50 rounded-lg py-1.5">
+                <p class="text-[10px] text-gray-500">昼食</p>
+                <p class="text-sm">&#x1F35A; 完食</p>
+              </div>
+              <div class="text-center bg-blue-50 rounded-lg py-1.5">
+                <p class="text-[10px] text-gray-500">お昼寝</p>
+                <p class="text-sm">&#x1F4A4; 1.5h</p>
+              </div>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">今日はお外遊びで砂場でお城を作りました。お友達と協力して大きなお城を完成させて、とても嬉しそうでした。🏰✨</p>
+          </div>
+        </div>
+
+        <!-- New photos -->
+        <div>
+          <p class="text-sm font-bold mb-3">📸 新しい写真 <span class="text-xs text-gray-400 font-normal">3枚</span></p>
+          <div class="flex gap-2 overflow-x-auto">
+            <div class="shrink-0 w-28 h-28 rounded-xl bg-gradient-to-br from-yellow-100 to-orange-100 flex items-center justify-center text-3xl relative">
+              &#x1F3DE;
+              <span class="absolute bottom-1 right-1 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+            </div>
+            <div class="shrink-0 w-28 h-28 rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-3xl relative">
+              &#x1F333;
+              <span class="absolute bottom-1 right-1 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+            </div>
+            <div class="shrink-0 w-28 h-28 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center text-3xl relative">
+              &#x1F3A8;
+              <span class="absolute bottom-1 right-1 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Book Tab -->
+      <div id="ptab-pcontact" class="px-5 py-4 hidden">
+        <p class="text-lg font-bold mb-4">連絡帳</p>
+
+        <!-- Child selector -->
+        <div class="flex gap-2 mb-4">
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-primary-500 text-white">はな</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">そうた</button>
+        </div>
+
+        <!-- Entries -->
+        <div class="space-y-3">
+          <div class="bg-white rounded-2xl border p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <p class="text-sm font-medium">3月19日（水）</p>
+              <span class="text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">今日</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              <div class="text-center bg-green-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">機嫌</p><p class="text-lg">&#x1F60A;</p><p class="text-[10px]">元気</p></div>
+              <div class="text-center bg-yellow-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">昼食</p><p class="text-lg">&#x1F35A;</p><p class="text-[10px]">完食</p></div>
+              <div class="text-center bg-blue-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">お昼寝</p><p class="text-lg">&#x1F4A4;</p><p class="text-[10px]">12:30-14:00</p></div>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed mb-3">今日はお外遊びで砂場でお城を作りました。お友達と協力して大きなお城を完成させて、とても嬉しそうでした。午後はお絵かきの時間でお花の絵を描いていました。</p>
+            <div class="flex items-center gap-2 pt-2 border-t">
+              <div class="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px]">&#x1F469;&#x200D;&#x1F3EB;</div>
+              <p class="text-[10px] text-gray-400">伊藤先生 &middot; 15:30</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <p class="text-sm font-medium">3月18日（火）</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              <div class="text-center bg-yellow-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">機嫌</p><p class="text-lg">&#x1F610;</p><p class="text-[10px]">ふつう</p></div>
+              <div class="text-center bg-yellow-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">昼食</p><p class="text-lg">&#x1F35A;</p><p class="text-[10px]">ほぼ完食</p></div>
+              <div class="text-center bg-blue-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">お昼寝</p><p class="text-lg">&#x1F4A4;</p><p class="text-[10px]">13:00-14:30</p></div>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">ブロック遊びに集中して遊んでいました。少し鼻水が出ていたので、こまめに拭いてあげました。お迎えの際に様子をお伝えします。</p>
+          </div>
+
+          <div class="bg-white rounded-2xl border p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <p class="text-sm font-medium">3月17日（月）</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              <div class="text-center bg-green-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">機嫌</p><p class="text-lg">&#x1F604;</p><p class="text-[10px]">はりきり</p></div>
+              <div class="text-center bg-green-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">昼食</p><p class="text-lg">&#x1F35A;</p><p class="text-[10px]">完食</p></div>
+              <div class="text-center bg-blue-50 rounded-lg py-2"><p class="text-[10px] text-gray-500">お昼寝</p><p class="text-lg">&#x1F4A4;</p><p class="text-[10px]">12:30-14:00</p></div>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">お散歩で公園に行きました。お花を見つけて「きれい！」と大喜びでした。給食のカレーも大好きでおかわりしていました。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photos Tab -->
+      <div id="ptab-pphotos" class="px-5 py-4 hidden">
+        <p class="text-lg font-bold mb-1">📸 写真ギャラリー</p>
+        <p class="text-xs text-gray-400 mb-4">はなちゃんの写真だけを表示しています</p>
+
+        <div class="flex items-center gap-2 bg-purple-50 rounded-xl p-3 mb-4">
+          <span class="sparkle">🤖</span>
+          <p class="text-xs text-purple-700">✨ AI顔認識でお子さまの写真を自動抽出</p>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs text-gray-500">今月のDL: <strong>2</strong> / 無制限</p>
+          <p class="text-xs text-gray-500">画質: <strong>4K</strong></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="rounded-xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 aspect-square flex items-center justify-center text-4xl relative group">
+            &#x1F3DE;
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+              <button class="bg-white text-xs px-3 py-1.5 rounded-lg shadow font-medium">&#x2B07; DL</button>
+            </div>
+            <span class="absolute top-1.5 right-1.5 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+          </div>
+          <div class="rounded-xl overflow-hidden bg-gradient-to-br from-green-100 to-emerald-100 aspect-square flex items-center justify-center text-4xl relative group">
+            &#x1F333;
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+              <button class="bg-white text-xs px-3 py-1.5 rounded-lg shadow font-medium">&#x2B07; DL</button>
+            </div>
+            <span class="absolute top-1.5 right-1.5 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+          </div>
+          <div class="rounded-xl overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 aspect-square flex items-center justify-center text-4xl relative group">
+            &#x1F3A8;
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+              <button class="bg-white text-xs px-3 py-1.5 rounded-lg shadow font-medium">&#x2B07; DL</button>
+            </div>
+            <span class="absolute top-1.5 right-1.5 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+          </div>
+          <div class="rounded-xl overflow-hidden bg-gradient-to-br from-pink-100 to-rose-100 aspect-square flex items-center justify-center text-4xl relative group">
+            &#x1F338;
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+              <button class="bg-white text-xs px-3 py-1.5 rounded-lg shadow font-medium">&#x2B07; DL</button>
+            </div>
+            <span class="absolute top-1.5 right-1.5 text-[8px] bg-white/90 text-purple-600 px-1 py-0.5 rounded">AI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Tab -->
+      <div id="ptab-pgrowth" class="px-5 py-4 hidden">
+        <p class="text-lg font-bold mb-1">🌱 成長記録</p>
+        <p class="text-xs text-gray-400 mb-4">🌸 はなちゃん &middot; 3歳2ヶ月</p>
+
+        <!-- Latest measurements -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="bg-white rounded-2xl border p-4 text-center">
+            <p class="text-xs text-gray-500 mb-1">身長</p>
+            <p class="text-2xl font-bold text-blue-500">95.2<span class="text-sm font-normal text-gray-400">cm</span></p>
+            <p class="text-[10px] text-green-500 mt-0.5">&#x2191; +1.5cm</p>
+          </div>
+          <div class="bg-white rounded-2xl border p-4 text-center">
+            <p class="text-xs text-gray-500 mb-1">体重</p>
+            <p class="text-2xl font-bold text-pink-500">14.3<span class="text-sm font-normal text-gray-400">kg</span></p>
+            <p class="text-[10px] text-green-500 mt-0.5">&#x2191; +0.4kg</p>
+          </div>
+        </div>
+
+        <!-- Growth chart placeholder -->
+        <div class="bg-white rounded-2xl border p-4 mb-4">
+          <p class="text-sm font-medium mb-3">成長推移グラフ</p>
+          <div class="h-40 flex items-end justify-around gap-1 px-2">
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-200 rounded-t" style="height:50%"></div>
+              <div class="w-6 bg-pink-200 rounded-t" style="height:40%"></div>
+              <p class="text-[8px] text-gray-400">10月</p>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-200 rounded-t" style="height:55%"></div>
+              <div class="w-6 bg-pink-200 rounded-t" style="height:42%"></div>
+              <p class="text-[8px] text-gray-400">11月</p>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-200 rounded-t" style="height:60%"></div>
+              <div class="w-6 bg-pink-200 rounded-t" style="height:45%"></div>
+              <p class="text-[8px] text-gray-400">12月</p>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-200 rounded-t" style="height:65%"></div>
+              <div class="w-6 bg-pink-200 rounded-t" style="height:48%"></div>
+              <p class="text-[8px] text-gray-400">1月</p>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-200 rounded-t" style="height:70%"></div>
+              <div class="w-6 bg-pink-200 rounded-t" style="height:50%"></div>
+              <p class="text-[8px] text-gray-400">2月</p>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <div class="w-6 bg-blue-400 rounded-t" style="height:75%"></div>
+              <div class="w-6 bg-pink-400 rounded-t" style="height:52%"></div>
+              <p class="text-[8px] text-gray-600 font-medium">3月</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 mt-2 justify-center text-[10px] text-gray-500">
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded bg-blue-400"></span> 身長</span>
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded bg-pink-400"></span> 体重</span>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="bg-white rounded-2xl border p-4">
+          <p class="text-sm font-medium mb-3">計測履歴</p>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center justify-between py-1.5 border-b"><span class="text-gray-500">2026/03/15</span><span>95.2cm / 14.3kg</span></div>
+            <div class="flex items-center justify-between py-1.5 border-b"><span class="text-gray-500">2026/02/15</span><span>93.7cm / 13.9kg</span></div>
+            <div class="flex items-center justify-between py-1.5 border-b"><span class="text-gray-500">2026/01/15</span><span>92.8cm / 13.6kg</span></div>
+            <div class="flex items-center justify-between py-1.5"><span class="text-gray-500">2025/12/15</span><span>91.5cm / 13.2kg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom navigation -->
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white border-t px-2 py-1.5 flex justify-around">
+      <button onclick="showTab('home')" class="bottom-nav-item active flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400" id="nav-home">
+        <span class="text-lg">🏠</span>
+        <span class="text-[10px]">ホーム</span>
+        <span class="nav-dot hidden h-1 w-1 rounded-full bg-primary-500"></span>
+      </button>
+      <button onclick="showTab('pcontact')" class="bottom-nav-item flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400" id="nav-pcontact">
+        <span class="text-lg">📖</span>
+        <span class="text-[10px]">連絡帳</span>
+        <span class="nav-dot hidden h-1 w-1 rounded-full bg-primary-500"></span>
+      </button>
+      <button onclick="showTab('pphotos')" class="bottom-nav-item flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400" id="nav-pphotos">
+        <span class="text-lg">📸</span>
+        <span class="text-[10px]">写真</span>
+        <span class="nav-dot hidden h-1 w-1 rounded-full bg-primary-500"></span>
+      </button>
+      <button onclick="showTab('pgrowth')" class="bottom-nav-item flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400" id="nav-pgrowth">
+        <span class="text-lg">🌱</span>
+        <span class="text-[10px]">成長</span>
+        <span class="nav-dot hidden h-1 w-1 rounded-full bg-primary-500"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Back to top link -->
+  <div class="fixed top-4 left-4 z-50">
+    <a href="../index.html" class="bg-white/90 backdrop-blur-sm text-xs text-gray-500 px-3 py-1.5 rounded-full shadow hover:text-primary-500">
+      &larr; サービス概要
+    </a>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('[id^="ptab-"]').forEach(el => el.classList.add('hidden'));
+      const target = tab === 'home' ? 'ptab-home' : 'ptab-' + tab;
+      document.getElementById(target)?.classList.remove('hidden');
+
+      document.querySelectorAll('.bottom-nav-item').forEach(el => {
+        el.classList.remove('active');
+        el.classList.add('text-gray-400');
+      });
+      const navId = tab === 'home' ? 'nav-home' : 'nav-' + tab;
+      const navEl = document.getElementById(navId);
+      if (navEl) {
+        navEl.classList.add('active');
+        navEl.classList.remove('text-gray-400');
+      }
+    }
+  </script>
+</body>
+</html>

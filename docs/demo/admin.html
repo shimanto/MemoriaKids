@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者画面デモ - MemoriaKids</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { primary: { 50:'#fef3f0',100:'#fde4db',200:'#fbc9b7',500:'#ea5a2e',600:'#d44422' } } } }
+    }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧸</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Noto Sans JP', sans-serif; }
+    .tab-active { border-bottom: 2px solid #ea5a2e; color: #ea5a2e; }
+    .child-card { transition: all 0.2s; cursor: pointer; }
+    .child-card:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .child-card.checked-in { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-color: #86efac; }
+    .child-card.checked-out { background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-color: #93c5fd; opacity: 0.7; }
+    .sparkle { animation: sparkle 2s ease-in-out infinite; }
+    @keyframes sparkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.15)} }
+    .sidebar-item { transition: all 0.2s; }
+    .sidebar-item:hover { transform: translateX(4px); }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Sidebar + Content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-60 bg-white border-r min-h-screen p-4">
+      <div class="flex items-center gap-2 mb-8">
+        <span class="text-xl sparkle">🧸</span>
+        <span class="font-bold text-primary-500">MemoriaKids</span>
+      </div>
+      <nav class="flex flex-col gap-1 text-sm">
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary-50 text-primary-600 font-medium" data-tab="dashboard">
+          <span>📊</span> ダッシュボード
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="attendance">
+          <span>📋</span> 出欠管理
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="touchpanel">
+          <span>🖥️</span> タッチパネル
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="contactbook">
+          <span>📖</span> 連絡帳
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="classes">
+          <span>🏫</span> クラス管理
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="staff">
+          <span>👩‍🏫</span> スタッフ管理
+        </a>
+        <a href="#" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50" data-tab="photos">
+          <span>📸</span> 写真
+        </a>
+      </nav>
+      <div class="mt-auto pt-4 border-t">
+        <a href="../index.html" class="text-xs text-gray-400 hover:text-primary-500">&larr; サービス概要に戻る</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 min-h-screen">
+      <!-- Top bar -->
+      <header class="bg-white border-b px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span class="lg:hidden text-xl sparkle">🧸</span>
+          <div>
+            <p class="font-medium text-sm">さくら保育園</p>
+            <p class="text-xs text-gray-400">2026年3月19日（水）</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">🟢 デモモード</span>
+          <div class="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-sm">👩‍🏫</div>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <!-- Dashboard Tab -->
+        <div id="tab-dashboard">
+          <h1 class="text-2xl font-bold mb-6">📊 ダッシュボード</h1>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100">
+              <p class="text-xs text-gray-500">🏫 登園済み</p>
+              <p class="text-2xl font-bold text-green-500">18<span class="text-sm text-gray-400">/24名</span></p>
+            </div>
+            <div class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-4 border border-red-100">
+              <p class="text-xs text-gray-500">😷 欠席</p>
+              <p class="text-2xl font-bold text-red-500">3名</p>
+            </div>
+            <div class="bg-gradient-to-br from-blue-50 to-sky-50 rounded-2xl p-4 border border-blue-100">
+              <p class="text-xs text-gray-500">📖 連絡帳（本日）</p>
+              <p class="text-2xl font-bold text-blue-500">12<span class="text-sm text-gray-400">/24件</span></p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-4 border border-purple-100">
+              <p class="text-xs text-gray-500">👩‍🏫 在籍スタッフ</p>
+              <p class="text-2xl font-bold text-purple-500">8名</p>
+            </div>
+          </div>
+          <!-- Recent activity -->
+          <div class="bg-white rounded-xl border p-4">
+            <h3 class="font-medium mb-3 text-sm">🕐 最近のアクティビティ</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-center gap-3">
+                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                <span class="text-gray-600">田中はなちゃんが<span class="font-medium">登園</span>しました</span>
+                <span class="ml-auto text-xs text-gray-400">08:42</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                <span class="text-gray-600">鈴木ゆうとくんが<span class="font-medium">QRコード</span>で登園しました</span>
+                <span class="ml-auto text-xs text-gray-400">08:38</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                <span class="text-gray-600">山田先生が<span class="font-medium">連絡帳</span>を3件作成しました</span>
+                <span class="ml-auto text-xs text-gray-400">08:30</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="h-2 w-2 rounded-full bg-purple-500"></span>
+                <span class="text-gray-600"><span class="font-medium">音声AI</span>で連絡帳ドラフト5件を自動生成しました</span>
+                <span class="ml-auto text-xs text-gray-400">08:15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Tab -->
+        <div id="tab-attendance" class="hidden">
+          <h1 class="text-2xl font-bold mb-6">📋 出欠管理</h1>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-primary-500 text-white">全クラス</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">ひよこ組 (0歳)</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">りす組 (1歳)</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">うさぎ組 (2歳)</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">さくら組 (3歳)</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">ひまわり組 (4歳)</button>
+            <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">そら組 (5歳)</button>
+          </div>
+          <div class="bg-white rounded-xl border overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead><tr class="border-b text-gray-500 text-left">
+                <th class="p-3 font-medium">園児名</th>
+                <th class="p-3 font-medium">クラス</th>
+                <th class="p-3 font-medium">ステータス</th>
+                <th class="p-3 font-medium">方式</th>
+                <th class="p-3 font-medium">登園</th>
+                <th class="p-3 font-medium">降園</th>
+                <th class="p-3 font-medium text-right">操作</th>
+              </tr></thead>
+              <tbody>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">田中 はな</td><td class="p-3 text-xs text-gray-500">さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x1F4F1; QR</td><td class="p-3 text-gray-500">08:42</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">鈴木 ゆうと</td><td class="p-3 text-xs text-gray-500">さくら組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x270F;&#xFE0F; 手入力</td><td class="p-3 text-gray-500">08:38</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">佐藤 みく</td><td class="p-3 text-xs text-gray-500">うさぎ組</td><td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full text-xs">降園済み</span></td><td class="p-3 text-xs">&#x270F;&#xFE0F; 手入力</td><td class="p-3 text-gray-500">08:15</td><td class="p-3 text-gray-500">16:30</td><td class="p-3"></td></tr>
+                <tr class="border-b hover:bg-gray-50"><td class="p-3 font-medium">高橋 りく</td><td class="p-3 text-xs text-gray-500">ひまわり組</td><td class="p-3"><span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-full text-xs">欠席</span></td><td class="p-3 text-xs">-</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-gray-400">-</td><td class="p-3"></td></tr>
+                <tr class="hover:bg-gray-50"><td class="p-3 font-medium">山本 あおい</td><td class="p-3 text-xs text-gray-500">ひよこ組</td><td class="p-3"><span class="bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-xs">登園済み</span></td><td class="p-3 text-xs">&#x1F4F1; QR</td><td class="p-3 text-gray-500">09:01</td><td class="p-3 text-gray-400">-</td><td class="p-3 text-right"><button class="text-xs border rounded px-2 py-1 text-gray-600 hover:bg-gray-50">降園</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Touch Panel Tab -->
+        <div id="tab-touchpanel" class="hidden">
+          <h1 class="text-2xl font-bold mb-2">🖥️ タッチパネル</h1>
+          <p class="text-sm text-gray-500 mb-6">🌸 さくら組（3歳児）- 園児をタップして登降園を打刻</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div class="child-card checked-in rounded-2xl border-2 p-4 text-center relative">
+              <div class="absolute top-2 right-2 text-xs">🟢</div>
+              <div class="mx-auto h-16 w-16 rounded-full bg-green-100 flex items-center justify-center text-3xl mb-2">👧</div>
+              <p class="text-sm font-bold">田中 はな</p>
+              <p class="text-[10px] text-green-600 mt-1">✅ 08:42 タップで降園</p>
+            </div>
+            <div class="child-card checked-in rounded-2xl border-2 p-4 text-center relative">
+              <div class="absolute top-2 right-2 text-xs">🟢</div>
+              <div class="mx-auto h-16 w-16 rounded-full bg-green-100 flex items-center justify-center text-3xl mb-2">👦</div>
+              <p class="text-sm font-bold">鈴木 ゆうと</p>
+              <p class="text-[10px] text-green-600 mt-1">✅ 08:38 タップで降園</p>
+            </div>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
+              <div class="mx-auto h-16 w-16 rounded-full bg-pink-50 flex items-center justify-center text-3xl mb-2">👧</div>
+              <p class="text-sm font-bold">伊藤 さくら</p>
+              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            </div>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
+              <div class="mx-auto h-16 w-16 rounded-full bg-blue-50 flex items-center justify-center text-3xl mb-2">👦</div>
+              <p class="text-sm font-bold">渡辺 そうた</p>
+              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            </div>
+            <div class="child-card checked-out rounded-2xl border-2 p-4 text-center opacity-60">
+              <div class="mx-auto h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl mb-2">👧</div>
+              <p class="text-sm font-bold">佐藤 みく</p>
+              <p class="text-[10px] text-blue-500 mt-1">08:15 → 16:30 🏠</p>
+            </div>
+            <div class="child-card rounded-2xl border-2 border-gray-200 bg-white p-4 text-center">
+              <div class="mx-auto h-16 w-16 rounded-full bg-yellow-50 flex items-center justify-center text-3xl mb-2">👧</div>
+              <p class="text-sm font-bold">小林 ひな</p>
+              <p class="text-[10px] text-gray-400 mt-1">👆 タップで登園</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Book Tab -->
+        <div id="tab-contactbook" class="hidden">
+          <h1 class="text-2xl font-bold mb-6">📖 連絡帳</h1>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-2">
+              <div class="bg-white rounded-xl border p-3 border-primary-300">
+                <div class="flex items-center gap-2">
+                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">&#x1F60A;</div>
+                  <div><p class="text-sm font-medium">田中 はな</p><p class="text-[10px] text-gray-400">さくら組 &middot; 3歳</p></div>
+                  <span class="ml-auto text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">AI生成</span>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl border p-3 hover:border-gray-300 cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <div class="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-sm">&#x1F610;</div>
+                  <div><p class="text-sm font-medium">鈴木 ゆうと</p><p class="text-[10px] text-gray-400">さくら組 &middot; 3歳</p></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl border p-3 hover:border-gray-300 cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-sm">&#x1F604;</div>
+                  <div><p class="text-sm font-medium">佐藤 みく</p><p class="text-[10px] text-gray-400">うさぎ組 &middot; 2歳</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-2 bg-white rounded-xl border p-6">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-xl">&#x1F60A;</div>
+                <div>
+                  <p class="font-medium">田中 はなちゃんの連絡帳</p>
+                  <p class="text-xs text-gray-400">2026年3月19日 &middot; さくら組</p>
+                </div>
+                <span class="ml-auto text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-full">🤖✨ AI自動生成</span>
+              </div>
+              <div class="space-y-4 text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                  <div><p class="text-xs text-gray-500 mb-1">機嫌</p><p class="font-medium">&#x1F60A; 元気</p></div>
+                  <div><p class="text-xs text-gray-500 mb-1">お昼寝</p><p class="font-medium">12:30〜14:00（よく眠れた）</p></div>
+                </div>
+                <div><p class="text-xs text-gray-500 mb-1">食事</p>
+                  <div class="flex gap-4"><span>朝食: <strong>完食</strong></span><span>昼食: <strong>ほぼ完食</strong></span><span>おやつ: <strong>完食</strong></span></div>
+                </div>
+                <div><p class="text-xs text-gray-500 mb-1">活動内容</p><p class="text-gray-700 leading-relaxed">今日はお外遊びで砂場でお城を作りました。お友達と一緒に協力して大きなお城を完成させることができました。とても嬉しそうでした。午後はお絵かきの時間で、お花の絵を描いていました。</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classes Tab -->
+        <div id="tab-classes" class="hidden">
+          <h1 class="text-2xl font-bold mb-6">🏫 クラス管理</h1>
+          <p class="text-sm text-gray-500 mb-4">2026年度</p>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">ひよこ組</h3><span class="text-xs bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full">0歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 6名 &middot; 在籍: 4名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 佐藤先生</p><p>&#x1F469; 副担任: 高橋先生</p></div></div>
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">りす組</h3><span class="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">1歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 8名 &middot; 在籍: 6名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 田中先生</p></div></div>
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">うさぎ組</h3><span class="text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-full">2歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 10名 &middot; 在籍: 8名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 山田先生</p><p>&#x1F469; 副担任: 小林先生</p></div></div>
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">さくら組</h3><span class="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">3歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 12名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 伊藤先生</p></div></div>
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">ひまわり組</h3><span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">4歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 14名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 渡辺先生</p><p>&#x1F469; 副担任: 中村先生</p></div></div>
+            <div class="bg-white rounded-xl border p-5"><div class="flex items-center justify-between mb-3"><h3 class="font-bold">そら組</h3><span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">5歳児</span></div><p class="text-sm text-gray-500 mb-2">定員: 15名 &middot; 在籍: 13名</p><div class="text-xs text-gray-400"><p>&#x1F469;&#x200D;&#x1F3EB; 担任: 佐藤先生（兼任）</p><p>&#x1F469; 副担任: 鈴木先生</p></div></div>
+          </div>
+        </div>
+
+        <!-- Staff Tab -->
+        <div id="tab-staff" class="hidden">
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold">👩‍🏫 スタッフ管理</h1>
+            <button class="bg-primary-500 text-white text-sm px-4 py-2.5 rounded-xl hover:bg-primary-600 transition-colors shadow-sm">➕ スタッフを招待</button>
+          </div>
+          <div class="bg-white rounded-xl border">
+            <div class="divide-y">
+              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">&#x1F469;&#x200D;&#x1F3EB;</div><div class="flex-1"><p class="font-medium text-sm">佐藤 美咲</p><p class="text-xs text-gray-400">sato@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span><span class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">園全体</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひよこ組(担任)</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">そら組(担任)</span></div></div><span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">管理者</span></div>
+              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center">&#x1F469;</div><div class="flex-1"><p class="font-medium text-sm">山田 花子</p><p class="text-xs text-gray-400">yamada@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">正社員</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">うさぎ組(担任)</span></div></div></div>
+              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">&#x1F469;</div><div class="flex-1"><p class="font-medium text-sm">高橋 みどり</p><p class="text-xs text-gray-400">takahashi@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">パート</span><span class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">担当クラスのみ</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひよこ組(副担任)</span></div></div></div>
+              <div class="flex items-center gap-4 p-4"><div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">&#x1F468;</div><div class="flex-1"><p class="font-medium text-sm">中村 太郎</p><p class="text-xs text-gray-400">nakamura@example.com</p><div class="flex gap-1 mt-0.5"><span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">契約</span><span class="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded">ひまわり組(副担任)</span></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photos Tab -->
+        <div id="tab-photos" class="hidden">
+          <h1 class="text-2xl font-bold mb-6">📸 写真ギャラリー</h1>
+          <div class="bg-white rounded-2xl border p-4 mb-4 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 flex items-center gap-3">
+            <span class="text-xl sparkle">🤖</span>
+            <div><p class="text-sm font-medium">✨ AI顔認識が有効です</p><p class="text-xs text-gray-500">園児ごとに自動分類されます</p></div>
+            <span class="ml-auto text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full">🟢 稼働中</span>
+          </div>
+          <div class="bg-white rounded-xl border p-4 mb-4 flex items-center gap-4">
+            <span class="text-sm text-gray-600">閲覧: <strong>4K</strong> | DL: <strong>4K</strong></span>
+            <span class="ml-auto text-sm text-green-600 font-medium">DL無制限</span>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-yellow-100 to-orange-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-5xl">&#x1F3DE;</span>
+              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            </div>
+            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-green-100 to-emerald-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-5xl">&#x1F333;</span>
+              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            </div>
+            <div class="rounded-xl overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 aspect-[4/3] flex items-center justify-center relative">
+              <span class="text-5xl">&#x1F3A8;</span>
+              <span class="absolute top-2 right-2 text-[10px] bg-white/90 text-purple-600 px-1.5 py-0.5 rounded-full">&#x2728; AI分類済み</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById('tab-' + tab)?.classList.remove('hidden');
+        document.querySelectorAll('[data-tab]').forEach(b => {
+          b.classList.remove('bg-primary-50','text-primary-600','font-medium');
+          b.classList.add('text-gray-600');
+        });
+        btn.classList.add('bg-primary-50','text-primary-600','font-medium');
+        btn.classList.remove('text-gray-600');
+      });
+    });
+  </script>
+</body>
+</html>
