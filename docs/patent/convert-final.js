@@ -10,7 +10,7 @@ const PDFDocument = require("pdfkit");
 
 const FINAL_DIR = path.join(__dirname, "final");
 const OUT_DIR = path.join(__dirname, "word", "final");
-const FIG_DIR = path.join(__dirname, "word", "final");
+const FIG_DIR = path.join(__dirname, "word", "a4portrait_mono");
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
@@ -210,16 +210,12 @@ async function buildDocx(srcFile, outFile) {
 
 async function buildCombinedPdf() {
   const FONT_NOTO = "C:/Windows/Fonts/NotoSansJP-VF.ttf";
-  const outPath = path.join(OUT_DIR, "特許出願書類一式_最終版_MK-PAT-2026-001.pdf");
+  const outPath = path.join(OUT_DIR, "特許出願書類一式_最終版_MK26001.pdf");
 
+  // 特許庁仕様: PDFタイトルプロパティを設定しない
   const doc = new PDFDocument({
     size: "A4",
     margins: { top: 85, bottom: 85, left: 85, right: 85 },
-    info: {
-      Title: "特許出願書類一式（最終版）MK-PAT-2026-001",
-      Author: "宮田 浩伸",
-      Subject: "発達マイルストーン推定及び情報開示制御を行う音声解析型保育支援システム",
-    },
   });
 
   doc.registerFont("Mincho", FONT_NOTO);
