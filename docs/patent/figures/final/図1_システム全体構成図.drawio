@@ -1,0 +1,119 @@
+<mxfile host="app.diagrams.net" modified="2026-04-09" agent="patent-fig" version="24.0.0" type="device">
+  <diagram id="fig1" name="図１ システム全体構成図">
+    <mxGraphModel dx="1422" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="【図１】システム全体構成図" style="text;html=1;fontSize=22;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="334" y="20" width="500" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 担当者端末 -->
+        <mxCell id="terminal" value="施設担当者端末&#xa;（タブレット・PC等）&#xa;&#xa;・音声入力&#xa;・ドラフト確認&#xa;・承認・フィードバック" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=0;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="40" y="370" width="240" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- アプリケーションサーバ枠 -->
+        <mxCell id="appserver" value="アプリケーションサーバ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;fontSize=18;fontStyle=1;verticalAlign=top;align=center;dashed=0;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="540" height="780" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声認識手段 -->
+        <mxCell id="m1" value="① 音声認識手段&#xa;（大規模音声認識モデル）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="120" width="480" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- 対象者別抽出手段 -->
+        <mxCell id="m2" value="② 対象者別抽出手段&#xa;（対象者マスタ照合・話者識別）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="205" width="480" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- 発達イベント検出手段 -->
+        <mxCell id="m3" value="③ 発達イベント検出手段&#xa;キーワード照合 / 文脈解析 / 機械学習分類" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="290" width="480" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- 初回性推定手段（強調：太線） -->
+        <mxCell id="m4" value="④ 初回性推定手段【中核】&#xa;過去履歴検索／類似文判定／発生頻度分析&#xa;→ 初回性スコア（0〜1）算出" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=4;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="340" y="380" width="500" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- 開示制御手段（強調：太線） -->
+        <mxCell id="m5" value="⑤ 開示制御手段【中核】&#xa;初回性スコア・開示適切性スコア・ユーザ設定&#xa;→ 表示／非表示／保留 を決定" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=4;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="340" y="490" width="500" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- 文書生成手段 -->
+        <mxCell id="m6" value="⑥ 文書生成手段&#xa;（配慮事項・文体スタイル反映）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="600" width="480" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- 学習更新手段 -->
+        <mxCell id="m7" value="⑦ 学習更新手段&#xa;（担当者フィードバックによるモデル更新）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="685" width="480" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- 除外情報記録 -->
+        <mxCell id="m8" value="⑧ 除外情報記録手段&#xa;（非表示・保留情報を理由付きで記録）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=16;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="350" y="770" width="480" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- AI処理サーバ -->
+        <mxCell id="aiserver" value="AI処理サーバ&#xa;&#xa;・音声認識エンジン&#xa;・文ベクトル化&#xa;　エンジン&#xa;・機械学習&#xa;　分類モデル" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=15;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="900" y="180" width="240" height="220" as="geometry"/>
+        </mxCell>
+
+        <!-- データベースサーバ -->
+        <mxCell id="dbserver" value="データベースサーバ&#xa;&#xa;・対象者マスタ&#xa;・過去報告文書&#xa;・配慮事項記録&#xa;・除外情報記録&#xa;・フィードバック履歴" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=15;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="900" y="450" width="240" height="220" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印（白黒・太め） -->
+        <mxCell id="a0" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="terminal" target="m1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="m1" target="m2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="m2" target="m3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="m3" target="m4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="m4" target="m5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" source="m5" target="m6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- AIサーバへの矢印（破線） -->
+        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;dashed=1;" edge="1" source="m1" target="aiserver" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;dashed=1;" edge="1" source="m4" target="aiserver" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- DBへの矢印（破線） -->
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;dashed=1;" edge="1" source="m4" target="dbserver" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;dashed=1;" edge="1" source="m7" target="dbserver" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- 文書→端末 -->
+        <mxCell id="a11" value="ドラフト" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;fontSize=14;fontFamily=Noto Sans JP;" edge="1" source="m6" target="terminal" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="290" y="632"/><mxPoint x="290" y="460"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- フィードバック→学習 -->
+        <mxCell id="a12" value="フィードバック" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;fontSize=14;fontFamily=Noto Sans JP;" edge="1" source="terminal" target="m7" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="160" y="550"/><mxPoint x="160" y="717"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 学習→検出モデル -->
+        <mxCell id="a13" value="モデル更新" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;dashed=1;endArrow=classic;endFill=1;fontSize=14;fontFamily=Noto Sans JP;" edge="1" source="m7" target="m3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="860" y="717"/><mxPoint x="860" y="325"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 開示制御→除外記録 -->
+        <mxCell id="a14" value="非表示／保留" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;endArrow=classic;endFill=1;fontSize=14;fontFamily=Noto Sans JP;" edge="1" source="m5" target="m8" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="900" y="535"/><mxPoint x="900" y="803"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
