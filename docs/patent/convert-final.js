@@ -10,7 +10,7 @@ const PDFDocument = require("pdfkit");
 
 const FINAL_DIR = path.join(__dirname, "final");
 const OUT_DIR = path.join(__dirname, "word", "final");
-const FIG_DIR = path.join(__dirname, "word", "a4portrait_mono");
+const FIG_DIR = path.join(__dirname, "word", "a4portrait_v3_mono");
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 

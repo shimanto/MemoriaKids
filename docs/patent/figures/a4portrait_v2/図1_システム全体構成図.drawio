@@ -1,0 +1,134 @@
+<mxfile host="app.diagrams.net" modified="2026-04-10" agent="patent-fig" version="24.0.0" type="device">
+  <diagram id="fig1" name="図１ システム全体構成図 A4縦v2">
+    <mxGraphModel dx="1422" dy="1700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- タイトル -->
+        <mxCell id="title" value="【図１】システム全体構成図" style="text;html=1;fontSize=22;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="467" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 担当者端末（左上） -->
+        <mxCell id="terminal" value="施設担当者端末&#xa;（タブレット・PC等）&#xa;・音声入力&#xa;・ドラフト確認&#xa;・承認・フィードバック" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=13;fontStyle=0;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="220" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- AI処理サーバ（右上） -->
+        <mxCell id="aiserver" value="AI処理サーバ&#xa;・音声認識エンジン&#xa;・文ベクトル化エンジン&#xa;・機械学習分類モデル" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=13;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="567" y="80" width="220" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- アプリケーションサーバ ラベル（枠の外側上） -->
+        <mxCell id="appserver_label" value="アプリケーションサーバ" style="text;html=1;fontSize=16;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="280" y="225" width="267" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- アプリケーションサーバ枠（ラベルなし） -->
+        <mxCell id="appserver" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="255" width="747" height="745" as="geometry"/>
+        </mxCell>
+
+        <!-- ① 音声認識手段 -->
+        <mxCell id="m1" value="① 音声認識手段（大規模音声認識モデル）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="285" width="667" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ② 対象者別抽出手段 -->
+        <mxCell id="m2" value="② 対象者別抽出手段（対象者マスタ照合・話者識別）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="385" width="667" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ③ 発達イベント検出手段 -->
+        <mxCell id="m3" value="③ 発達イベント検出手段&#xa;キーワード照合 / 文脈解析 / 機械学習分類" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="485" width="667" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- ④ 初回性推定手段（中核：太線） -->
+        <mxCell id="m4" value="④ 初回性推定手段【中核】&#xa;過去履歴検索 / 類似文判定（ベクトル類似度） / 発生頻度分析&#xa;→ 初回性スコア（0〜1）算出" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=4;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="590" width="667" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ⑤ 開示制御手段（中核：太線） -->
+        <mxCell id="m5" value="⑤ 開示制御手段【中核】&#xa;初回性スコア + 開示適切性スコア + ユーザ設定&#xa;→ 「表示」／「非表示」／「保留」 を決定" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=4;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="710" width="667" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ⑥ 文書生成手段 -->
+        <mxCell id="m6" value="⑥ 文書生成手段（配慮事項・文体スタイル反映）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="830" width="667" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ⑦ 学習更新手段 -->
+        <mxCell id="m7" value="⑦ 学習更新手段（フィードバックによる検出・推定モデル更新）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=14;fontStyle=1;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="80" y="925" width="667" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- データベースサーバ -->
+        <mxCell id="dbserver" value="データベースサーバ：対象者マスタ／過去報告文書／配慮事項記録／除外情報記録／フィードバック履歴" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=12;fontStyle=1;align=center;fontFamily=Noto Sans JP;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1030" width="747" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- メイン処理矢印（実線・太め） -->
+        <mxCell id="a0" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="terminal" target="m1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="150" y="225"/><mxPoint x="150" y="275"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m1" target="m2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m2" target="m3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m3" target="m4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m4" target="m5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m5" target="m6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m6" target="m7" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=3;endArrow=classic;endFill=1;endSize=12;" edge="1" source="m7" target="dbserver" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- AI処理サーバへの破線矢印（密な点線） -->
+        <mxCell id="a_ai1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;endSize=10;startSize=10;dashed=1;dashPattern=2 2;fixDash=1;" edge="1" source="m1" target="aiserver" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="730" y="315"/><mxPoint x="730" y="200"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a_ai2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1;endArrow=classic;endFill=1;endSize=10;startSize=10;dashed=1;dashPattern=2 2;fixDash=1;" edge="1" source="m4" target="aiserver" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="20" y="630"/><mxPoint x="20" y="200"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- フィードバックループ：端末→学習更新（密な破線、左外側を回す） -->
+        <mxCell id="a_fb" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;dashed=1;dashPattern=2 2;fixDash=1;endArrow=classic;endFill=1;endSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="20" y="140"/>
+              <mxPoint x="20" y="952"/>
+              <mxPoint x="80" y="952"/>
+            </Array>
+            <mxPoint x="40" y="140" as="source"/>
+            <mxPoint x="80" y="952" as="target"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a_fb_label" value="フィードバック" style="text;html=1;fontSize=12;fontFamily=Noto Sans JP;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="-25" y="540" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- 学習更新ループ：⑦学習→③発達イベント検出（右外側、密な破線） -->
+        <mxCell id="a_upd" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;strokeWidth=2;dashed=1;dashPattern=2 2;fixDash=1;endArrow=classic;endFill=1;endSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="807" y="952"/>
+              <mxPoint x="807" y="517"/>
+              <mxPoint x="747" y="517"/>
+            </Array>
+            <mxPoint x="747" y="952" as="source"/>
+            <mxPoint x="747" y="517" as="target"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a_upd_label" value="モデル更新" style="text;html=1;fontSize=12;fontFamily=Noto Sans JP;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="785" y="700" width="80" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
