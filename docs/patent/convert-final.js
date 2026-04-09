@@ -59,9 +59,10 @@ function mdToParagraphs(filePath) {
       paragraphs.push(heading(trimmed.replace(/^#+\s*/, ""), HeadingLevel.HEADING_3));
     } else if (trimmed === "") {
       paragraphs.push(emptyLine());
-    } else if (trimmed.startsWith("| ") && trimmed.includes("---")) {
+    } else if (trimmed.startsWith("|") && /^\|[\s\-:|]+\|$/.test(trimmed)) {
+      // Skip markdown table separator row (e.g., |---|---|)
       continue;
-    } else if (trimmed.startsWith("| ")) {
+    } else if (trimmed.startsWith("|")) {
       const cells = trimmed.split("|").filter(c => c.trim()).map(c => c.trim());
       paragraphs.push(p("　" + cells.join("　｜　")));
     } else {
@@ -181,9 +182,10 @@ async function buildCombinedPdf() {
         heading3(trimmed.replace(/^#+\s*/, ""));
       } else if (trimmed === "") {
         gap();
-      } else if (trimmed.startsWith("| ") && trimmed.includes("---")) {
+      } else if (trimmed.startsWith("|") && /^\|[\s\-:|]+\|$/.test(trimmed)) {
+        // Skip markdown table separator row (e.g., |---|---|)
         continue;
-      } else if (trimmed.startsWith("| ")) {
+      } else if (trimmed.startsWith("|")) {
         const cells = trimmed.split("|").filter(c => c.trim()).map(c => c.trim());
         body("  " + cells.join("　|　"));
       } else {
