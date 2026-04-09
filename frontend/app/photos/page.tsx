@@ -9,12 +9,13 @@ import {
   Upload,
   Sparkles,
   Image as ImageIcon,
-  Filter,
   Download,
   User,
   Loader2,
+  ImageDown,
+  ArrowUpCircle,
 } from "lucide-react";
-import { usePhotos, useUploadPhoto, type Photo } from "@/lib/hooks";
+import { usePhotos, useUploadPhoto, useDownloadStatus, usePhotoDownload, type Photo } from "@/lib/hooks";
 import { useAuthStore } from "@/lib/auth";
 
 export default function PhotosPage() {
@@ -23,12 +24,15 @@ export default function PhotosPage() {
 
   const { data, isLoading, error } = usePhotos();
   const uploadPhoto = useUploadPhoto();
+  const { data: downloadStatusData } = useDownloadStatus();
+  const photoDownload = usePhotoDownload();
 
   useEffect(() => {
     useAuthStore.getState().hydrate();
   }, []);
 
   const photos = data?.data ?? [];
+  const dlStatus = downloadStatusData?.data;
 
   const filtered = photos.filter((p) => {
     if (!filterChild) return true;
@@ -44,7 +48,32 @@ export default function PhotosPage() {
     e.target.value = "";
   }
 
+  function handleDownload(photoId: string) {
+    photoDownload.mutate(photoId);
+  }
+
   const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787";
+
+  // Quality label for display
+  function qualityLabel(): string {
+    if (!dlStatus) return "";
+    const vq = dlStatus.viewQuality;
+    if (vq <= 0) return "原画";
+    if (vq <= 480) return "480p";
+    if (vq <= 1920) return "Full HD";
+    if (vq <= 3840) return "4K";
+    return "原画";
+  }
+
+  function downloadQualityLabel(): string {
+    if (!dlStatus) return "";
+    const dq = dlStatus.downloadQuality;
+    if (dq === null || (dq !== null && dq <= 0)) return "8K原画";
+    if (dq <= 800) return "800px";
+    if (dq <= 1920) return "Full HD";
+    if (dq <= 3840) return "4K";
+    return "原画";
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -99,6 +128,41 @@ export default function PhotosPage() {
           </CardContent>
         </Card>
 
+        {/* Download status bar */}
+        {dlStatus && (
+          <Card className="mb-6">
+            <CardContent className="flex flex-wrap items-center gap-4 p-4">
+              <div className="flex items-center gap-2">
+                <ImageDown className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700">
+                  閲覧: <strong>{qualityLabel()}</strong>
+                </span>
+                <span className="text-gray-300">|</span>
+                <span className="text-sm text-gray-700">
+                  DL: <strong>{downloadQualityLabel()}</strong>
+                </span>
+              </div>
+              <div className="flex items-center gap-2 ml-auto">
+                {dlStatus.monthlyLimit < 0 ? (
+                  <span className="text-sm text-green-600 font-medium">DL無制限</span>
+                ) : (
+                  <>
+                    <span className="text-sm text-gray-600">
+                      今月のDL: <strong>{dlStatus.used}</strong> / {dlStatus.monthlyLimit}枚
+                    </span>
+                    {dlStatus.remaining <= 0 && (
+                      <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        <ArrowUpCircle className="h-3 w-3" />
+                        上限到達
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Filters */}
         <div className="mb-6 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
@@ -140,9 +204,10 @@ export default function PhotosPage() {
                 <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                   {photo.url ? (
                     <img
-                      src={`${apiBase}${photo.url}`}
+                      src={`${apiBase}/api/photos/${photo.id}/view`}
                       alt={photo.caption ?? "写真"}
                       className="h-full w-full object-cover"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="text-center">
@@ -154,8 +219,18 @@ export default function PhotosPage() {
                     AI分類済み
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <Button size="sm" variant="secondary" className="shadow-lg">
-                      <Download className="h-3.5 w-3.5" />
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="shadow-lg"
+                      onClick={() => handleDownload(photo.id)}
+                      disabled={photoDownload.isPending || (dlStatus !== undefined && dlStatus.monthlyLimit >= 0 && dlStatus.remaining <= 0)}
+                    >
+                      {photoDownload.isPending ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Download className="h-3.5 w-3.5" />
+                      )}
                       ダウンロード
                     </Button>
                   </div>

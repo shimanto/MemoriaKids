@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,14 +12,24 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  QrCode,
+  Wifi,
+  Smartphone,
+  ScanFace,
+  Monitor,
 } from "lucide-react";
 import {
   useAttendance,
   useCheckIn,
   useCheckOut,
+  useClasses,
   type AttendanceRecord,
+  type SiblingInfo,
+  type NurseryClass,
 } from "@/lib/hooks";
 import { useAuthStore } from "@/lib/auth";
+import { SiblingBatchDialog } from "@/components/attendance/sibling-batch-dialog";
+import { QrScanner } from "@/components/attendance/qr-scanner";
 
 type DisplayStatus = "checked_in" | "checked_out" | "absent" | "not_yet";
 
@@ -30,6 +40,16 @@ const statusLabel: Record<DisplayStatus, { text: string; color: string }> = {
   not_yet: { text: "未登園", color: "text-gray-500 bg-gray-100" },
 };
 
+const methodLabel: Record<string, { text: string; icon: string }> = {
+  manual: { text: "手入力", icon: "✏️" },
+  qr_code: { text: "QR", icon: "📱" },
+  beacon: { text: "BLE", icon: "📡" },
+  iot_device: { text: "IoT", icon: "🏷️" },
+  face_recognition: { text: "顔認証", icon: "🤖" },
+};
+
+const AGE_LABELS = ["0歳児", "1歳児", "2歳児", "3歳児", "4歳児", "5歳児", "6歳児"];
+
 function formatTime(iso: string | null): string {
   if (!iso) return "—";
   const d = new Date(iso);
@@ -38,10 +58,16 @@ function formatTime(iso: string | null): string {
 
 export default function AttendancePage() {
   const [search, setSearch] = useState("");
-  const [filterClass, setFilterClass] = useState("all");
+  const [selectedClassId, setSelectedClassId] = useState<string | "all">("all");
+  const [showQrScanner, setShowQrScanner] = useState(false);
+  const [siblingDialog, setSiblingDialog] = useState<{
+    siblings: SiblingInfo[];
+    childName: string;
+  } | null>(null);
 
   const today = new Date().toISOString().slice(0, 10);
   const { data, isLoading, error } = useAttendance({ from: today });
+  const { data: classesData } = useClasses();
   const checkIn = useCheckIn();
   const checkOut = useCheckOut();
   const user = useAuthStore((s) => s.user);
@@ -51,14 +77,16 @@ export default function AttendancePage() {
   }, []);
 
   const records = data?.data ?? [];
+  const classes = classesData?.data ?? [];
 
-  // Derive unique class names
-  const classes = ["all", ...new Set(records.map((r) => r.childName.split(" ")[0] + "組"))];
-
-  const filtered = records.filter((r) => {
-    const matchSearch = r.childName.includes(search);
-    return matchSearch;
-  });
+  // クラス別にフィルタ
+  const filtered = useMemo(() => {
+    return records.filter((r) => {
+      const matchSearch = !search || r.childName.includes(search);
+      const matchClass = selectedClassId === "all" || r.classId === selectedClassId;
+      return matchSearch && matchClass;
+    });
+  }, [records, search, selectedClassId]);
 
   const checkedInCount = records.filter((r) => r.status === "checked_in").length;
   const checkedOutCount = records.filter((r) => r.status === "checked_out").length;
@@ -66,18 +94,47 @@ export default function AttendancePage() {
 
   function handleCheckIn(childId: string) {
     if (!user?.nurseryId) return;
-    checkIn.mutate({ childId, nurseryId: user.nurseryId });
+    checkIn.mutate(
+      { childId, nurseryId: user.nurseryId, method: "manual" },
+      {
+        onSuccess: (data) => {
+          const siblings = data?.siblings ?? [];
+          if (siblings.length > 0) {
+            const childRecord = records.find((r) => r.childId === childId);
+            setSiblingDialog({
+              siblings,
+              childName: childRecord?.childName ?? "",
+            });
+          }
+        },
+      },
+    );
   }
 
   function handleCheckOut(recordId: string) {
     checkOut.mutate({ recordId });
   }
 
+  function handleQrSuccess(data: unknown) {
+    const response = data as { siblings?: SiblingInfo[] };
+    if (response?.siblings && response.siblings.length > 0) {
+      setSiblingDialog({ siblings: response.siblings, childName: "QR登園" });
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">出欠管理</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">出欠管理</h1>
+          <a href="/attendance/touchpanel">
+            <Button variant="outline" size="sm">
+              <Monitor className="h-4 w-4" />
+              タッチパネル
+            </Button>
+          </a>
+        </div>
 
         {/* Summary */}
         <div className="grid gap-4 sm:grid-cols-3 mb-6">
@@ -110,10 +167,68 @@ export default function AttendancePage() {
           </Card>
         </div>
 
-        {/* Filters */}
+        {/* Method Buttons */}
         <Card className="mb-6">
-          <CardContent className="flex flex-wrap items-center gap-4 p-4">
-            <div className="relative flex-1 min-w-[200px]">
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-gray-700">認証方式</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowQrScanner(true)}>
+              <QrCode className="h-4 w-4" />
+              QRコード
+            </Button>
+            <Button variant="outline" size="sm" disabled title="モバイルアプリで利用">
+              <Wifi className="h-4 w-4" />
+              BLEビーコン
+            </Button>
+            <Button variant="outline" size="sm" disabled title="ゲートウェイ連携">
+              <Smartphone className="h-4 w-4" />
+              IoTデバイス
+            </Button>
+            <Button variant="outline" size="sm" disabled title="カメラ連携">
+              <ScanFace className="h-4 w-4" />
+              顔認証
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Class Tabs + Search */}
+        <Card className="mb-6">
+          <CardContent className="p-4 space-y-3">
+            {/* Class tabs */}
+            {classes.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                <button
+                  onClick={() => setSelectedClassId("all")}
+                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                    selectedClassId === "all"
+                      ? "bg-primary-500 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  全クラス
+                </button>
+                {classes.map((cls) => (
+                  <button
+                    key={cls.id}
+                    onClick={() => setSelectedClassId(cls.id)}
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                      selectedClassId === cls.id
+                        ? "bg-primary-500 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {cls.name}
+                    <span className="ml-1 text-[10px] opacity-70">
+                      ({AGE_LABELS[cls.ageGroup] ?? `${cls.ageGroup}歳`})
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Search */}
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
@@ -129,7 +244,14 @@ export default function AttendancePage() {
         {/* Children list */}
         <Card>
           <CardHeader>
-            <CardTitle>出欠一覧</CardTitle>
+            <CardTitle>
+              出欠一覧
+              {selectedClassId !== "all" && classes.find((c) => c.id === selectedClassId) && (
+                <span className="ml-2 text-sm font-normal text-gray-500">
+                  — {classes.find((c) => c.id === selectedClassId)!.name}
+                </span>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -151,7 +273,9 @@ export default function AttendancePage() {
                   <thead>
                     <tr className="border-b text-left text-gray-500">
                       <th className="pb-3 font-medium">園児名</th>
+                      <th className="pb-3 font-medium">クラス</th>
                       <th className="pb-3 font-medium">ステータス</th>
+                      <th className="pb-3 font-medium">方式</th>
                       <th className="pb-3 font-medium">登園時間</th>
                       <th className="pb-3 font-medium">降園時間</th>
                       <th className="pb-3 font-medium text-right">操作</th>
@@ -160,16 +284,27 @@ export default function AttendancePage() {
                   <tbody className="divide-y">
                     {filtered.map((record) => {
                       const displayStatus: DisplayStatus = record.status;
+                      const method = methodLabel[record.checkInMethod] ?? methodLabel.manual;
                       return (
                         <tr key={record.id} className="hover:bg-gray-50">
                           <td className="py-3 font-medium text-gray-900">
                             {record.childName}
+                          </td>
+                          <td className="py-3 text-gray-600">
+                            <span className="text-xs">
+                              {record.className ?? "未所属"}
+                            </span>
                           </td>
                           <td className="py-3">
                             <span
                               className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusLabel[displayStatus]?.color ?? "text-gray-500 bg-gray-100"}`}
                             >
                               {statusLabel[displayStatus]?.text ?? record.status}
+                            </span>
+                          </td>
+                          <td className="py-3 text-gray-600">
+                            <span className="text-xs">
+                              {method.icon} {method.text}
                             </span>
                           </td>
                           <td className="py-3 text-gray-600">
@@ -180,18 +315,17 @@ export default function AttendancePage() {
                           </td>
                           <td className="py-3 text-right">
                             <div className="flex justify-end gap-2">
-                              {record.status === "checked_in" &&
-                                !record.checkOutTime && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => handleCheckOut(record.id)}
-                                    disabled={checkOut.isPending}
-                                  >
-                                    <LogOut className="h-3.5 w-3.5" />
-                                    降園
-                                  </Button>
-                                )}
+                              {record.status === "checked_in" && !record.checkOutTime && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleCheckOut(record.id)}
+                                  disabled={checkOut.isPending}
+                                >
+                                  <LogOut className="h-3.5 w-3.5" />
+                                  降園
+                                </Button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -204,6 +338,23 @@ export default function AttendancePage() {
           </CardContent>
         </Card>
       </main>
+
+      {showQrScanner && user?.nurseryId && (
+        <QrScanner
+          nurseryId={user.nurseryId}
+          onSuccess={handleQrSuccess}
+          onClose={() => setShowQrScanner(false)}
+        />
+      )}
+
+      {siblingDialog && user?.nurseryId && (
+        <SiblingBatchDialog
+          siblings={siblingDialog.siblings}
+          nurseryId={user.nurseryId}
+          checkedInChildName={siblingDialog.childName}
+          onClose={() => setSiblingDialog(null)}
+        />
+      )}
     </div>
   );
 }

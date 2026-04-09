@@ -1,0 +1,113 @@
+<mxfile host="app.diagrams.net" modified="2026-04-09" agent="patent-fig" version="24.0.0" type="device">
+  <diagram id="fig3" name="図３ データ構造図">
+    <mxGraphModel dx="1422" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- タイトル -->
+        <mxCell id="title" value="【図３】データ構造図" style="text;html=1;fontSize=16;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="10" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 対象者マスタテーブル -->
+        <mxCell id="children_header" value="対象者マスタテーブル（children）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="300" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="children_body" value="識別子 (id)&#xa;氏名 (name)&#xa;施設識別子 (nurseryId)&#xa;クラス識別子 (classId)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- ケアノートテーブル -->
+        <mxCell id="care_header" value="配慮事項テーブル／ケアノート（care_notes）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="380" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="care_body" value="識別子 (id)&#xa;対象者識別子 (childId) → 対象者マスタ&#xa;カテゴリ (category):&#xa;　健康(health) / アレルギー(allergy) / 行動特性(behavior) /&#xa;　発達(development) / 家庭環境(family) / 食事制限(dietary) /&#xa;　服薬(medication) /&#xa;　★発達マイルストーンフィルタ (milestone_filter) /&#xa;　コミュニケーションスタイル (communication_style) /&#xa;　その他(other)&#xa;表題 (title)&#xa;内容 (content)&#xa;優先度 (priority): 0=低 / 1=中 / 2=高&#xa;有効状態 (isActive)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="250" width="380" height="210" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声記録テーブル -->
+        <mxCell id="audio_header" value="音声記録テーブル（audio_recordings）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="60" width="340" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio_body" value="識別子 (id)&#xa;施設識別子 (nurseryId)&#xa;録音者識別子 (recordedBy)&#xa;表題 (title)&#xa;種別 (type): 会議 / 引継ぎ 等&#xa;ファイルパス (fileUrl)&#xa;録音日時 (recordedAt)&#xa;処理状態 (status):&#xa;　受付中(uploading) → 文字起こし中(transcribing) →&#xa;　抽出中(extracting) → 生成中(generating) →&#xa;　確認待ち(review_pending) → 完了(completed)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="90" width="340" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声書き起こしテーブル -->
+        <mxCell id="transcript_header" value="音声書き起こしテーブル（audio_transcripts）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="320" width="340" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="transcript_body" value="識別子 (id)&#xa;音声記録識別子 (audioRecordingId) → 音声記録テーブル&#xa;全文書き起こしデータ (fullTranscript): テキスト&#xa;対象者別抽出データ (childExtracts): JSON構造体&#xa;　[{対象者識別子, 対象者氏名, 関連文配列, 要約}, ...]&#xa;処理モデル名 (processingModel)&#xa;処理日時 (processedAt)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="350" width="340" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- 連絡帳テーブル（メイン・強調） -->
+        <mxCell id="entry_header" value="報告文書テーブル／連絡帳（contact_book_entries）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="530" width="500" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="entry_body" value="識別子 (id)&#xa;対象者識別子 (childId) → 対象者マスタ&#xa;記録者識別子 (authorId)&#xa;日付 (date)&#xa;活動内容 (activities): テキスト&#xa;AIドラフト (aiDraft): テキスト&#xa;&#xa;★フィルタ済項目データ (aiFilteredItems): JSON配列 【本発明の中核データ】&#xa;┌────────────────────────────────────────────────┐&#xa;│ [{                                                                        │&#xa;│　　除外種別(type): &quot;milestone&quot;（発達マイルストーン）,           │&#xa;│　　除外内容(description): &quot;（除外された文の本文）&quot;,               │&#xa;│　　除外理由(reason): &quot;ご家庭での体験を優先するため...&quot;         │&#xa;│ }, ...]                                                                     │&#xa;└────────────────────────────────────────────────┘&#xa;&#xa;生成元 (source): 手動(manual) / AI自動生成(ai_generated) / AI補助(ai_assisted)&#xa;音声書き起こし識別子 (audioTranscriptId) → 音声書き起こしテーブル&#xa;承認状態 (isApproved)&#xa;承認者識別子 (approvedBy)&#xa;承認日時 (approvedAt)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontSize=10;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="460" y="560" width="500" height="330" as="geometry"/>
+        </mxCell>
+
+        <!-- リレーション矢印 -->
+        <!-- 対象者 → ケアノート (1:N) -->
+        <mxCell id="r1" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="children_body" target="care_header" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声記録 → 書き起こし (1:1) -->
+        <mxCell id="r2" value="1 : 1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="audio_body" target="transcript_header" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 書き起こし → 連絡帳 (1:N) -->
+        <mxCell id="r3" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="transcript_body" target="entry_header" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ケアノート → 連絡帳（参照） -->
+        <mxCell id="r4" value="参照" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;dashed=1;fontSize=10;" edge="1" source="care_body" target="entry_header" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="500"/>
+              <mxPoint x="710" y="500"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 対象者 → 連絡帳（参照） -->
+        <mxCell id="r5" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="children_body" target="entry_body" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="125"/>
+              <mxPoint x="40" y="700"/>
+              <mxPoint x="460" y="700"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 凡例 -->
+        <mxCell id="legend_frame" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="510" width="340" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_title" value="【凡例】" style="text;html=1;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="515" width="60" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend1" value="★ = 本発明の中核をなすデータ要素" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="535" width="300" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend2" value="→ = 外部キー参照（リレーション方向）" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="553" width="300" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend3" value="日本語名 (英字名) = テーブル名／フィールド名の表記形式" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="571" width="320" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend4" value="破線 = 参照関係（フィルタリング時に参照）" style="text;html=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="589" width="300" height="18" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

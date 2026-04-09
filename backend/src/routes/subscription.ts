@@ -12,6 +12,12 @@ const subscription = new Hono();
 // Types
 // ---------------------------------------------------------------------------
 
+interface PhotoTier {
+  viewQuality: number;   // max px for viewing/thumbnails
+  downloadQuality: number | null; // max px for download (null = original)
+  monthlyDownloadLimit: number; // -1 = unlimited
+}
+
 interface PlanDetails {
   id: string;
   name: string;
@@ -22,19 +28,21 @@ interface PlanDetails {
   maxChildren: number;
   maxStaff: number;
   photoStorage: string;
+  photoTier: PhotoTier;
 }
 
-const PLANS: PlanDetails[] = [
+export const PLANS: PlanDetails[] = [
   {
     id: "free",
     name: "Free",
     price: 0,
     currency: "JPY",
     interval: "month",
-    features: ["Up to 5 children", "Basic attendance tracking", "Contact book"],
+    features: ["Up to 5 children", "Basic attendance tracking", "Contact book", "Photo viewing (480px)", "Photo download 10/month (800px)"],
     maxChildren: 5,
     maxStaff: 2,
     photoStorage: "500MB",
+    photoTier: { viewQuality: 480, downloadQuality: 800, monthlyDownloadLimit: 10 },
   },
   {
     id: "basic",
@@ -48,10 +56,13 @@ const PLANS: PlanDetails[] = [
       "Contact book",
       "Growth tracking",
       "Photo sharing",
+      "Full HD photo (1920px)",
+      "Photo download 100/month",
     ],
     maxChildren: 20,
     maxStaff: 5,
     photoStorage: "5GB",
+    photoTier: { viewQuality: 1920, downloadQuality: 1920, monthlyDownloadLimit: 100 },
   },
   {
     id: "premium",
@@ -65,10 +76,13 @@ const PLANS: PlanDetails[] = [
       "AI face recognition",
       "Advanced analytics",
       "Priority support",
+      "4K photo (3840px)",
+      "Unlimited downloads",
     ],
     maxChildren: 50,
     maxStaff: 15,
     photoStorage: "50GB",
+    photoTier: { viewQuality: 3840, downloadQuality: 3840, monthlyDownloadLimit: -1 },
   },
   {
     id: "enterprise",
@@ -83,10 +97,13 @@ const PLANS: PlanDetails[] = [
       "API access",
       "Dedicated support",
       "Multi-location management",
+      "8K original quality",
+      "Unlimited downloads",
     ],
     maxChildren: -1,
     maxStaff: -1,
     photoStorage: "Unlimited",
+    photoTier: { viewQuality: -1, downloadQuality: null, monthlyDownloadLimit: -1 },
   },
 ];
 
@@ -226,3 +243,4 @@ subscription.get("/status", authMiddleware, async (c) => {
 });
 
 export default subscription;
+export type { PlanDetails, PhotoTier };

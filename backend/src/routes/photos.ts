@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { z } from "zod";
 import { authMiddleware } from "../middleware/auth.js";
 import {
   validateQuery,
@@ -124,6 +123,83 @@ photos.get("/face-match/:childId", async (c) => {
     data: matchedPhotos,
     childId,
     totalMatches: matchedPhotos.length,
+  });
+});
+
+// ---------------------------------------------------------------------------
+// GET /photos/:id/view — Plan-based quality viewing image
+// ---------------------------------------------------------------------------
+
+photos.get("/:id/view", async (c) => {
+  const { id } = validateParams(c, uuidParamSchema);
+  const user = c.get("user");
+
+  if (!user.nurseryId) {
+    return c.json({ error: "User is not associated with a nursery" }, 400);
+  }
+
+  const result = await photoService.getViewImage(id, user.nurseryId);
+  if (!result) {
+    return c.json({ error: "Photo not found" }, 404);
+  }
+
+  return new Response(result.buffer, {
+    headers: {
+      "Content-Type": result.mimeType,
+      "Cache-Control": "private, max-age=3600",
+    },
+  });
+});
+
+// ---------------------------------------------------------------------------
+// GET /photos/:id/download — Plan-based quality download with limit tracking
+// ---------------------------------------------------------------------------
+
+photos.get("/:id/download", async (c) => {
+  const { id } = validateParams(c, uuidParamSchema);
+  const user = c.get("user");
+
+  if (!user.nurseryId) {
+    return c.json({ error: "User is not associated with a nursery" }, 400);
+  }
+
+  const result = await photoService.getDownloadImage(id, user.userId, user.nurseryId);
+
+  if ("error" in result) {
+    return c.json({ error: result.error, remainingDownloads: result.remainingDownloads }, 403);
+  }
+
+  return new Response(result.buffer, {
+    headers: {
+      "Content-Type": result.mimeType,
+      "Content-Disposition": `attachment; filename="${result.fileName}"`,
+      "Content-Length": String(result.buffer.length),
+    },
+  });
+});
+
+// ---------------------------------------------------------------------------
+// GET /photos/download-status — Monthly download count & limits
+// ---------------------------------------------------------------------------
+
+photos.get("/download-status", async (c) => {
+  const user = c.get("user");
+
+  if (!user.nurseryId) {
+    return c.json({ error: "User is not associated with a nursery" }, 400);
+  }
+
+  const tier = await photoService.getPhotoTier(user.nurseryId);
+  const count = await photoService.getMonthlyDownloadCount(user.userId, user.nurseryId);
+
+  return c.json({
+    data: {
+      monthlyLimit: tier.monthlyDownloadLimit,
+      used: count,
+      remaining: tier.monthlyDownloadLimit < 0 ? -1 : Math.max(0, tier.monthlyDownloadLimit - count),
+      viewQuality: tier.viewQuality,
+      downloadQuality: tier.downloadQuality,
+    },
   });
 });
 

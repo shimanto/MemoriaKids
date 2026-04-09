@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" modified="2026-04-09" agent="patent-fig" version="24.0.0" type="device">
+  <diagram id="fig2" name="図２ 処理フロー図">
+    <mxGraphModel dx="1200" dy="1600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- タイトル -->
+        <mxCell id="title" value="【図２】処理フロー図（発達マイルストーンフィルタリングパイプライン）" style="text;html=1;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="620" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- S1 音声受付 -->
+        <mxCell id="s1" value="S１ 音声受付&#xa;&#xa;・音声ファイル受付&#xa;・形式／サイズ検証&#xa;・状態:「受付中」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="50" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- S2 文字起こし -->
+        <mxCell id="s2" value="S２ 音声文字起こし&#xa;&#xa;・Whisper-large-v3 による全文変換&#xa;・状態:「文字起こし中」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="170" width="260" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- S3 対象者別抽出 -->
+        <mxCell id="s3" value="S３ 対象者別抽出&#xa;&#xa;・対象者マスタ氏名照合&#xa;・対象者ごとの関連文抽出&#xa;・状態:「抽出中」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- S4 フィルタリング（強調枠） -->
+        <mxCell id="s4frame" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffbe6;strokeColor=#000000;strokeWidth=3;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="400" width="480" height="280" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s4title" value="S４ 発達マイルストーンフィルタリング【本発明の中核】" style="text;html=1;fontSize=13;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="210" y="410" width="400" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- 第一段階 -->
+        <mxCell id="stage1" value="第一段階: 既定発達マイルストーンキーワード群との照合&#xa;&#xa;「初めて歩」「はじめて歩」「初めて立」「はじめて立」&#xa;「初めてのことば」「はじめてのことば」...（全18語）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="210" y="445" width="400" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- 第二段階 -->
+        <mxCell id="stage2" value="第二段階: 対象者別カスタムフィルタ規則&#xa;（配慮事項データベース「発達マイルストーンフィルタ」カテゴリから取得）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="210" y="530" width="400" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 判定分岐 -->
+        <mxCell id="diamond" value="キーワード&#xa;一致？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="600" width="100" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 一致あり -->
+        <mxCell id="match_yes" value="一致あり&#xa;→ 除外" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="610" width="100" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 一致なし -->
+        <mxCell id="match_no" value="一致なし&#xa;→ ドラフトに含める" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="610" width="120" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- S5 フィルタ結果記録 -->
+        <mxCell id="s5" value="S５ フィルタ結果記録&#xa;&#xa;除外された各項目を構造化データとして記録:&#xa;・除外種別:「発達マイルストーン」&#xa;・除外内容: 除外された文の本文&#xa;・除外理由: キーワード名を含む説明文" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;strokeWidth=2;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="710" width="300" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- S6 ドラフト生成 -->
+        <mxCell id="s6" value="S６ 報告文書ドラフト生成&#xa;&#xa;・フィルタ後の関連文に基づきドラフト作成&#xa;・配慮事項（ケアノート）の反映&#xa;・コミュニケーションスタイル（文体）の適用&#xa;・フィルタ済件数の注意喚起表示&#xa;・状態:「確認待ち」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="840" width="300" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- S7 承認 -->
+        <mxCell id="s7" value="S７ 担当者による確認・承認&#xa;&#xa;・ドラフト内容の確認・編集&#xa;・フィルタ済項目の確認&#xa;・除外解除（ドラフトへの復元）可&#xa;・承認 → 生成元を「AI補助」に変更&#xa;・状態:「完了」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=10;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="980" width="300" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="s1" target="s2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="s2" target="s3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="s3" target="stage1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="stage1" target="stage2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="stage2" target="diamond" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a6" value="YES" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="diamond" target="match_yes" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a7" value="NO" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;fontSize=10;fontStyle=1;" edge="1" source="diamond" target="match_no" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="match_yes" target="s5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="match_no" target="s6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="s5" target="s6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a11" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;" edge="1" source="s6" target="s7" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- 復元の破線矢印 -->
+        <mxCell id="a12" value="除外解除&#xa;（復元）" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#000000;dashed=1;fontSize=9;" edge="1" source="s7" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="1035"/>
+              <mxPoint x="200" y="760"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

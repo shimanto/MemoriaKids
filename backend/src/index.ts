@@ -14,6 +14,10 @@ import photoRoutes from "./routes/photos.js";
 import subscriptionRoutes from "./routes/subscription.js";
 import careNotesRoutes from "./routes/care-notes.js";
 import audioRoutes from "./routes/audio.js";
+import familyGroupRoutes from "./routes/family-groups.js";
+import ssoRoutes from "./routes/sso.js";
+import classRoutes from "./routes/classes.js";
+import staffRoutes from "./routes/staff.js";
 
 // ---------------------------------------------------------------------------
 // App setup
@@ -60,6 +64,7 @@ app.get("/health", (c) => {
 // ---------------------------------------------------------------------------
 
 app.route("/api/auth", authRoutes);
+app.route("/api/auth/sso", ssoRoutes);
 app.route("/api/attendance", attendanceRoutes);
 app.route("/api/contact-book", contactBookRoutes);
 app.route("/api/growth", growthRoutes);
@@ -67,6 +72,9 @@ app.route("/api/photos", photoRoutes);
 app.route("/api/subscription", subscriptionRoutes);
 app.route("/api/care-notes", careNotesRoutes);
 app.route("/api/audio", audioRoutes);
+app.route("/api/family-groups", familyGroupRoutes);
+app.route("/api/classes", classRoutes);
+app.route("/api/staff", staffRoutes);
 
 // ---------------------------------------------------------------------------
 // Global error handler

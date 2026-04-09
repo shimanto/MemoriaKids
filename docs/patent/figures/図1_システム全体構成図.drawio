@@ -1,0 +1,170 @@
+<mxfile host="app.diagrams.net" modified="2026-04-09" agent="patent-fig" version="24.0.0" type="device">
+  <diagram id="fig1" name="図１ システム全体構成図">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- タイトル -->
+        <mxCell id="title" value="【図１】システム全体構成図" style="text;html=1;fontSize=16;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="384" y="10" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 保育施設ネットワーク枠 -->
+        <mxCell id="network" value="教育施設又は保育施設 ネットワーク" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#000000;fontSize=12;fontStyle=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="1090" height="720" as="geometry"/>
+        </mxCell>
+
+        <!-- 担当者端末 -->
+        <mxCell id="terminal" value="担当者端末&#xa;（タブレット・スマートフォン・PC）&#xa;&#xa;・音声録音&#xa;・ドラフト確認&#xa;・承認操作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="200" width="200" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- アプリケーションサーバ枠 -->
+        <mxCell id="appserver" value="アプリケーションサーバ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;fontStyle=1;verticalAlign=top;align=center;" vertex="1" parent="1">
+          <mxGeometry x="360" y="90" width="440" height="580" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声受付部 -->
+        <mxCell id="s1" value="音声受付部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="130" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 音声文字起こし部 -->
+        <mxCell id="s2" value="音声文字起こし部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="210" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 対象者別抽出部 -->
+        <mxCell id="s3" value="対象者別抽出部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="290" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 発達マイルストーンフィルタリング部（強調） -->
+        <mxCell id="s4" value="発達マイルストーン&#xa;フィルタリング部&#xa;【本発明の中核】" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;strokeWidth=3;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="370" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- フィルタ結果記録部 -->
+        <mxCell id="s5" value="フィルタ結果記録部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="470" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 報告文書ドラフト生成部 -->
+        <mxCell id="s6" value="報告文書ドラフト生成部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="550" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 承認処理部 -->
+        <mxCell id="s7" value="承認処理部" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="620" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- AI処理サーバ -->
+        <mxCell id="aiserver" value="AI処理サーバ&#xa;（音声認識エンジン Whisper）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="180" width="230" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- 既定キーワード群 -->
+        <mxCell id="keywords" value="既定発達マイルストーン&#xa;キーワード群&#xa;（初めて歩、はじめて歩、&#xa; 初めて立、はじめて立...）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="340" width="230" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- カスタムフィルタ -->
+        <mxCell id="custom" value="園児別（対象者別）&#xa;カスタムフィルタ規則&#xa;（ケアノートから取得）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="440" width="230" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- データベースサーバ -->
+        <mxCell id="dbserver" value="データベースサーバ (PostgreSQL)&#xa;&#xa;・音声記録テーブル (audio_recordings)&#xa;・音声書き起こしテーブル (audio_transcripts)&#xa;・連絡帳テーブル (contact_book_entries)&#xa;・ケアノートテーブル (care_notes)&#xa;・対象者マスタテーブル (children)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#000000;fontSize=11;align=left;spacingLeft=15;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="550" width="250" height="170" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 端末→音声受付部 -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;fontSize=10;" edge="1" source="terminal" target="s1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1label" value="音声データ" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a1">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 矢印: 音声受付→文字起こし -->
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 文字起こし→抽出 -->
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 抽出→フィルタ -->
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: フィルタ→記録 -->
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 記録→生成 -->
+        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 生成→承認 -->
+        <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s6" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 矢印: 承認→端末 -->
+        <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;dashed=1;" edge="1" source="s7" target="terminal" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="645"/>
+              <mxPoint x="400" y="400"/>
+              <mxPoint x="180" y="400"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a8label" value="確認・承認結果" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a8">
+          <mxGeometry x="-0.2" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 矢印: 文字起こし→AIサーバ -->
+        <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;" edge="1" source="s2" target="aiserver" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a9label" value="音声認識要求" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a9">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 矢印: キーワード→フィルタ -->
+        <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;dashed=1;" edge="1" source="keywords" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a10label" value="第一段階" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a10">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 矢印: カスタム→フィルタ -->
+        <mxCell id="a11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;dashed=1;" edge="1" source="custom" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a11label" value="第二段階" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a11">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 矢印: アプリ→DB -->
+        <mxCell id="a12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;startArrow=classic;endArrow=classic;" edge="1" source="appserver" target="dbserver" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a12label" value="データ読み書き" style="edgeLabel;fontSize=10;" vertex="1" connectable="0" parent="a12">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -97,6 +97,10 @@ auth.post("/login", async (c) => {
     return c.json({ error: "Invalid email or password" }, 401);
   }
 
+  if (!user.passwordHash) {
+    return c.json({ error: "このアカウントはSSO（LINE/Apple/Google）でログインしてください" }, 401);
+  }
+
   const passwordValid = await bcrypt.compare(body.password, user.passwordHash);
 
   if (!passwordValid) {

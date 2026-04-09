@@ -19,6 +19,7 @@
     "hono": "^4.6.16",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
+    "sharp": "^0.34.5",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.5",
     "@types/pg": "^8.11.10",
+    "@types/sharp": "^0.31.1",
     "drizzle-kit": "^0.30.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
